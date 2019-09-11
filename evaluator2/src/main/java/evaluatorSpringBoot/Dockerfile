@@ -10,20 +10,22 @@ FROM ruby:2.5.5
 #  RUN apt-get update -y
 
 # Adding gems
-  COPY Gemfile Gemfile
+#  COPY Gemfile Gemfile
 #  COPY Gemfile.lock Gemfile.lock
 
-  ENV GEM_HOME="/usr/local/bundle"
-  ENV PATH $GEM_HOME/bin:$GEM_HOME/gems/bin:$PATH
+#  ENV GEM_HOME="/usr/local/bundle"
+#  ENV PATH $GEM_HOME/bin:$GEM_HOME/gems/bin:$PATH
 
  # RUN gem update --system
 
-  RUN bundle install
+#  RUN bundle install
 
 # Adding project files
 COPY . /
 
 EXPOSE 3000
 
+RUN echo $(ls)
+
 #ENTRYPOINT ["/negotiatus/docker-entrypoint.sh"]
-#CMD ["ruby", "engine.rb"]
+CMD ["ruby", "test.rb"]

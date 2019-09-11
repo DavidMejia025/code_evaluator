@@ -1,0 +1,11 @@
+Docker
+
+Docker Images
+
+Docker composer
+
+docker volumes
+  https://rominirani.com/docker-tutorial-series-part-7-data-volumes-93073a1b5b72
+  https://blog.container-solutions.com/understanding-volumes-docker
+  Bind
+    https://dockertips.com/volumenes
