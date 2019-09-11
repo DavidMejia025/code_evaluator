@@ -6,14 +6,7 @@ def print_result
 
   10.times { |i| puts "Hello World" }
 
-  File.open("/app/src/test/resources/new_ruby_file2.txt", "w") { |file| file.puts "Im stronger than steel!"}
-  
-
-  if test == nil 
-    File.open(pwd, "w") { |file| file.puts test}
-  else
-    File.open(pwd, "w") { |file| file.puts test}
-  end
+  puts test unless test == nil 
 end
 
 print_result

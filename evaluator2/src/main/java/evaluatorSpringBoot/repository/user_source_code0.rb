@@ -1,1 +1,1 @@
-def test;puts 'Im stronger than steel!!!!';end;test
+def test;'Im stronger than steel!!!!';end

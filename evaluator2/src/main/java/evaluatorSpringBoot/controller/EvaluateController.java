@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -21,10 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.model.Bind;
-import com.github.dockerjava.api.model.Image;
+import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DockerClientBuilder;
+import com.github.dockerjava.core.command.LogContainerResultCallback;
 
 import evaluatorSpringBoot.Code;
 
@@ -40,7 +43,7 @@ public class EvaluateController {
   private final String user_souce_code = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/src/main/java/evaluatorSpringBoot/repository/user_source_code0.rb";
   
   @PostMapping(value = "/cheers", headers="Accept=application/json", consumes = "application/JSON")
-  public Code postEvaluate(@RequestBody String name) throws IOException {
+  public Code postEvaluate(@RequestBody String name) throws IOException, Exception {
 	 JSONObject obj = new JSONObject(name);
 	  
 	 String code = obj.getString("code");
@@ -59,8 +62,21 @@ public class EvaluateController {
     
     System.out.println(container.getId());
    
+    System.out.println("==========================");
+    System.out.println(dockerClient.logContainerCmd(container.getId()));
+    
     dockerClient.startContainerCmd(container.getId())
       .exec();
+    
+    FrameReaderITestCallback collectFramesCallback = new FrameReaderITestCallback();
+    
+     dockerClient.logContainerCmd(container.getId())
+    	    .withFollowStream(true)
+    		.withStdOut(true)
+    		.withTailAll()
+    		.exec(collectFramesCallback).awaitCompletion();
+    
+    System.out.println(collectFramesCallback.frames);
     
     String result = buildResponse();
     
@@ -68,6 +84,7 @@ public class EvaluateController {
                          result);
     
     System.out.println(newCode.code);
+    //System.out.println(logs);
     return newCode;
   }
   
@@ -75,7 +92,7 @@ public class EvaluateController {
 	  //https://www.journaldev.com/825/java-create-new-file
       File new_file = new File(user_souce_code);
 
-      String fileData = "def test;" + code + ";"+ "end;" + "test";
+      String fileData = "def test;" + code + ";"+ "end";
       FileOutputStream fos = new FileOutputStream(new_file);
       fos.write(fileData.getBytes());
       fos.flush();
@@ -110,5 +127,17 @@ public class EvaluateController {
 	    
 	    return result;
 	}
+	
+	public static class FrameReaderITestCallback extends LogContainerResultCallback {
+
+        public List<Frame> frames = new ArrayList<>();
+
+        @Override
+        public void onNext(Frame item) {
+            frames.add(item);
+            super.onNext(item);
+        }
+
+    }
 }
 
