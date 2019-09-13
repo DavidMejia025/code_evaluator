@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Evaluate {
+public class CodeEvaluator {
 
   public static void main(String[] args) {
-    SpringApplication.run(Evaluate.class, args);
+    SpringApplication.run(CodeEvaluator.class, args);
   }
 }

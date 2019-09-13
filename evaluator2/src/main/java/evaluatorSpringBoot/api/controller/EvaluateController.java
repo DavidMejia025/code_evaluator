@@ -35,9 +35,11 @@ public class EvaluateController {
   private DockerClient dockerClient;
   private final AtomicLong counter     = new AtomicLong();
   private final String result_path     = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/src/main/java/evaluatorSpringBoot/repository/result.txt";
+  //private final String result_path     = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/src/main/java/evaluatorSpringBoot/repository/result.txt";
   private final String volume_path     = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2";
   private final String test_file_path  = "app/src/main/java/evaluatorSpringBoot/repository/stdout_test.rb";
   private final String user_souce_code = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/src/main/java/evaluatorSpringBoot/repository/user_source_code0.rb";
+  //private final String user_souce_code = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/src/main/java/evaluatorSpringBoot/repository/user_source_code0.rb";
   
   @PostMapping(value = "/cheers", headers="Accept=application/json", consumes = "application/JSON")
   public Code postEvaluate(@RequestBody String name) throws IOException, Exception {
