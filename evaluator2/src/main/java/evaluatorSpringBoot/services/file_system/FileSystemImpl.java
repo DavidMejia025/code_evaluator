@@ -15,7 +15,15 @@ public class FileSystemImpl implements FileSystem {
 // It is not possible to create a static method when it comes from an interface?
 	public void createTestFile(String body) {
 		File new_file = new File(user_souce_code);
-	    String fileData = "def test;" + body + ";"+ "end2";
+	    String fileData = "def test;" + body + ";"+ "end";
+	    
+	    generateFOS(new_file, fileData);
+	    System.out.println(body);
+    }
+    
+    public void createResultFile(String body) {
+		File new_file = new File(result_path);
+	    String fileData = "Result of the code evaluation is \n" + body + "\n";
 	    
 	    generateFOS(new_file, fileData);
 	    System.out.println(body);

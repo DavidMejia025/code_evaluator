@@ -70,7 +70,7 @@
 		    FrameReaderITestCallback collectFramesCallback = new FrameReaderITestCallback();
 		    
 		     dockerClient.logContainerCmd(container.getId())
-		    	    .withFollowStream(true)
+		    	  .withFollowStream(true)
 		    		.withStdOut(true)
 		    		.withTailAll()
 		    		.exec(collectFramesCallback).awaitCompletion();

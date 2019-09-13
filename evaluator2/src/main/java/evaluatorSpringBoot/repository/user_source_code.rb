@@ -1,1 +1,1 @@
-def test;puts 'Hello world from Docker Yeah!!!';end2
+def test;num =  2; balance = 10; result = num + balance; puts 'its working Yeahh!!!!';end

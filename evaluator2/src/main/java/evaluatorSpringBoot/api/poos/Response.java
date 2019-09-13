@@ -6,25 +6,27 @@ final means that the class can not be inherit and varible can no change value*/
 public class Response {
 //[] private but with a getter/. This declaration corresponds to the setter stuff?
 
-    private final long     codeId;
+    //private final long     userId;
+    private final long     submissionId;
+    public  final String   output;
+    public  final String   code;
     //private final long     userId = 123456;
     //private final String[] status = new String[3];
-    public  final String   code;
     //private final String   language = "ruby";
-    //private final String   result = "done"; // result id?
     private final int      exitCode = 200;
 
-    public Response(long id, String code) {
-        this.codeId   = id;
-        this.code     = code;
+    public Response(long submissionId, String code, String output) {
+        this.submissionId = submissionId;
+        this.code = code;
+        this.output = output;
     }
 
-    public long getCodeId() {
-        return codeId;
+    public long getsubmissionId() {
+        return submissionId;
     }
 
-    public String getCode() {
-        return code;
+    public String getOutput() {
+        return output;
     }
 
     public int getExitCode() {
