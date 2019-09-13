@@ -1,6 +1,6 @@
-package evaluatorSpringBoot.controller;
+package evaluatorSpringBoot.api.controller;
 /* Http request:
- * params = "{\"code\":\"puts "Hello world from Docker Yeah!!!\"}"
+ * params = {code: "puts 'Hello world from Docker Yeah!!!'"}.to_json
  * headers = {"Content-Type"=>"application/json"}
  * response = HTTParty.post('http://localhost:8080/cheers', body: params, headers: headers)
  */
@@ -22,21 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
 
-import evaluatorSpringBoot.Code;
+import evaluatorSpringBoot.api.poos.Code;
 
 @RestController
 public class EvaluateController {
   private DockerClient dockerClient;
-  private static final String template = "Hello,%s";
   private final AtomicLong counter     = new AtomicLong();
-  private final String directory       = "docker"; 
   private final String result_path     = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/src/main/java/evaluatorSpringBoot/repository/result.txt";
   private final String volume_path     = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2";
   private final String test_file_path  = "app/src/main/java/evaluatorSpringBoot/repository/stdout_test.rb";

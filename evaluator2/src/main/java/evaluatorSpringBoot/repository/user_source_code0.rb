@@ -1,1 +1,1 @@
-def test;'Im stronger than steel!!!!';end
+def test;puts 'Hello world from Docker Yeah!!!';end
