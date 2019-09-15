@@ -6,48 +6,72 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.json.JSONObject;
+
+import com.google.common.io.Files;
 
 import evaluatorSpringBoot.docker.MyDockerClientImpl;
 import evaluatorSpringBoot.poos.Response;
 import evaluatorSpringBoot.poos.Submission;
 
-public class CodeEvaluatorImpl implements CodeEvaluator {
-	private final String result_path     = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/submissions/result.txt";
-    private final String user_souce_code = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/submissions/user_source_code.rb";
+public class CodeEvaluatorImpl  implements CodeEvaluator {
+	private final String basePath   = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/submissions/";
+	private final String stdoutPath = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/submissions/documents/stdout_test.rb";
+
 	private String params;
 	
 	public CodeEvaluatorImpl(String params) {
         this.params = params;
     }
+	
 	@Override
-	public Response runEval() {
+	public Response runEval() throws IOException{
 		String params = parseJson(this.params);
 		
-		Submission newSubmission =  new Submission(1, params);
+		Submission newSubmission = new Submission(params);
+		//preProcess?
+		prepareTest(newSubmission);
 		
-		createTestFile(params);
+		Response submissionResult = runTest(newSubmission);
 		
-		Response submissionResult = runTest();
+		//Post process?
+		cleanTest(newSubmission);
 		
         return submissionResult;
     }
 	
-	private Response runTest() {
+	private void prepareTest(Submission newSubmission) throws IOException{
+		createSubmissionFolder(newSubmission);
+		
+		createTestFile(newSubmission);
+		
+		copyStdoutFile(newSubmission);
+	}
+	
+	private Response runTest(Submission newSubmission) {
 		MyDockerClientImpl dockerClient = new MyDockerClientImpl();
 		
-		dockerClient.createContainer();
+		dockerClient.createContainer(newSubmission);
 		dockerClient.startContainer(dockerClient.getContainerId());
 		
 		String dockerLogs = dockerClient.getLogs(dockerClient.getContainerId());
 		
-		createResultFile(dockerLogs);
+		createResultFile(newSubmission, dockerLogs);
 		
 		Response submissionResult = new Response(1,"some code", dockerLogs);
 		
 		System.out.println(dockerClient.getContainerId());
 		return submissionResult;
+	}
+	
+	private void cleanTest(Submission newSubmission) {
+		String path =  basePath + Integer.toString(newSubmission.getSubmissionId()) ;
+		File dir    = new File(path);
+		
+		deleteDirectory(dir);
 	}
 	
 	private String parseJson(String json) {
@@ -58,28 +82,42 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
 		return jsonParsed;
 	}
 	
-	public void createTestFile(String body) {
-		File new_file = new File(user_souce_code);
-	    String fileData = "def test;" + body + ";"+ "end";
-	    
+	private void createSubmissionFolder(Submission newSubmission) { 
+		File newFolder = new File(basePath + Integer.toString(newSubmission.getSubmissionId()));
+        
+        boolean created =  newFolder.mkdir();
+        
+        if(created)
+            System.out.println("Folder was created !");
+        else
+            System.out.println("Unable to create folder");
+	}
+	
+	public void createTestFile(Submission newSubmission) {
+		String fileUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "user_source_code.rb";
+		File new_file   = new File(fileUrl);
+		
+		String code = newSubmission.getCode();
+		
+	    String fileData = "def test;" + code + ";"+ "end";
 	    generateFOS(new_file, fileData);
-	    System.out.println(body);
     }
     
-    public void createResultFile(String body) {
-		File new_file = new File(result_path);
-	    String fileData = "Result of the code evaluation is \n" + body + "\n";
+    public void createResultFile(Submission newSubmission, String body) {
+    	String resultUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "result.txt";
+		File new_file = new File(resultUrl);
 	    
+		String fileData = "Result of the code evaluation is \n" + body + "\n"; 
 	    generateFOS(new_file, fileData);
-	    System.out.println(body);
     }
 	
-	public String readTestFile(){
-		String result = "";
-	    String line = null;
+	public String readTestFile(Submission newSubmission){
+		String resultUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "result.txt";
+		String result    = "";
+	    String line      = null;
 	    
 		try {
-	    	FileReader fileReader = new FileReader(result_path);
+	    	FileReader fileReader = new FileReader(resultUrl);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 	      
 	        while((line = bufferedReader.readLine()) != null) {
@@ -90,15 +128,39 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
 	        bufferedReader.close();  	      
 	    }
 	    catch(FileNotFoundException ex) {
-            System.out.println("Unable to open file '" + result_path + "'");                
+            System.out.println("Unable to open file '" + resultUrl + "'");                
         }
         catch(IOException ex) {
-            System.out.println("Error reading file '" + result_path + "'");                  
+            System.out.println("Error reading file '" + resultUrl + "'");                  
             // Or we could just do this: 
             // ex.printStackTrace();
         }
 		
 		return result;
+	}
+	
+	private void copyStdoutFile(Submission newSubmission) throws IOException{
+		String from = stdoutPath;
+		String to   = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "stdout_test.rb";
+		
+		Path srcFilePath  = Paths.get(from);
+        Path destFilePath = Paths.get(to);
+        
+        Files.copy(srcFilePath.toFile(), destFilePath.toFile());
+        
+        newSubmission.setStdoutPath("/submissions/" + Integer.toString(newSubmission.getSubmissionId()) + "/" + "stdout_test.rb");
+	}
+	
+	public static boolean deleteDirectory(File dir) {
+		if (dir.isDirectory()) {
+			File[] children = dir.listFiles();
+			for (int i = 0; i < children.length; i++) {
+				deleteDirectory(children[i]);
+			}
+		}
+
+		System.out.println("removing file or directory : " + dir.getName());
+		return dir.delete();
 	}
 	
 	private void generateFOS(File new_file, String fileData) {

@@ -1,4 +1,4 @@
-package evaluatorSpringBoot.api.poos;
+package evaluatorSpringBoot.poos;
 
 /*[recap this variable definitions]
 final means that the class can not be inherit and varible can no change value*/
