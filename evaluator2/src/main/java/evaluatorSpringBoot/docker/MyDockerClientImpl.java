@@ -5,12 +5,15 @@ package evaluatorSpringBoot.docker;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.Image;
+import com.github.dockerjava.api.model.SearchItem;
 import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
@@ -20,7 +23,10 @@ import com.github.dockerjava.core.command.PullImageResultCallback;
 import evaluatorSpringBoot.poos.Submission;
 
 public class MyDockerClientImpl implements MyDockerClient {
-	private final String volume_path     = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2";
+	//private final String volume_path    = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2";
+	//private final String dockerFilePath = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/src/main/resources/docker/Dockerfile";
+	private final String volume_path    = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2";
+	private final String dockerFilePath = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/src/main/resources/docker/Dockerfile";
 	public String imageId;
 	public String containerId;
 	public DockerClient client;
@@ -43,10 +49,12 @@ public class MyDockerClientImpl implements MyDockerClient {
 	
 	@Override
 	public void createContainer(Submission newSubmission) {
+		this.imageId = getImageId(client, "build");
+		
 		Volume volume1    = new Volume("/app");
-        String targetFile =  "app" + newSubmission.getStdoutPath(); 
-         
-	    CreateContainerResponse container = this.client.createContainerCmd("e93b746e985b")
+        String targetFile = "app" + newSubmission.getStdoutPath(); 
+        
+	    CreateContainerResponse container = this.client.createContainerCmd(this.imageId)
 			      .withVolumes(volume1)
 			      .withBinds(new Bind(volume_path, volume1))
 			      .withCmd("ruby", targetFile)
@@ -54,7 +62,7 @@ public class MyDockerClientImpl implements MyDockerClient {
 			      			     
 		System.out.println("create container");
 		System.out.println(targetFile);
-		
+		System.out.println(this.imageId);
 		this.containerId = container.getId();
 	}
 
@@ -114,36 +122,52 @@ public class MyDockerClientImpl implements MyDockerClient {
 		if (method == "build") {
 			imageId = buildImage(client, dockerFilePath);
 		} else {
-			pullImage(client, imageName);
-			//get the image id from the list of images
-			imageId = findImageId(client, imageName);
+			if (findImageId(this.client, "rubyx") == ""){
+				pullImage(this.client, "ruby:2.5.5");
+		    }
+			
+			imageId = findImageId(this.client, "ruby");
 		}
 		
 		return imageId;
 	}
 	
 	public void pullImage(DockerClient client, String name) {
-		// Verify if image already exist to not pull every time.
-		//* image contains an attribute repoTags={ruby:1-slim} it will require some regex or similar tool
-		//* How to get the image id from the pull.
-		client.pullImageCmd("ruby").exec(new PullImageResultCallback());
+		System.out.println(client.pullImageCmd(name).exec(new PullImageResultCallback()));
 	}
 	
 	private String findImageId(DockerClient client, String name) {
-		List<Image> images = client.listImagesCmd().exec();
-
-		for(int i=0; i < images.size(); i++){
-		    System.out.println(images);
+		List<Image> images  = client.listImagesCmd().exec();
+		Pattern regexImage  = Pattern.compile(name);
+		String imageIdFound = "";
+	
+		for(int i = 0; i < images.size(); i++){
+			String[] repoTags  = images.get(i).getRepoTags();
+			
+			for (int j = 1; j <= repoTags.length; j++) {
+				System.out.println(repoTags[j-1]);
+				System.out.println(name);
+				Matcher m = regexImage.matcher(repoTags[j-1]);
+				
+				if (m.find()) {
+					imageIdFound = images.get(i).getId().replaceAll("sha256:", "");
+					j = repoTags.length + 1;
+					i = images.size();
+				}
+			}
 		}
-		//List<SearchItem> dockerSearch = dockerClient.searchImagesCmd("ruby").exec();
+		//List<SearchItem> dockerSearch = client.searchImagesCmd("alpine").exec();
 		//System.out.println("Search returned" + dockerSearch.toString());
-		
-        return images.toString();
+
+        return imageIdFound;
 	}
 	
 	public String buildImage(DockerClient client, String dockerFilePath) {
-		String imageId = client.buildImageCmd(new File(dockerFilePath)).withNoCache(true)
-			    	      .exec(new BuildImageResultCallback()).awaitImageId();
+		String imageId = client.buildImageCmd(new File(dockerFilePath))
+				.withNoCache(true)
+			    .exec(new BuildImageResultCallback())
+			    .awaitImageId();
+		
 		return imageId;
 	}
 }
