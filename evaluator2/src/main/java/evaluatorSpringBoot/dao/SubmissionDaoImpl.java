@@ -11,6 +11,7 @@ import java.util.List;
 
 import evaluatorSpringBoot.poos.Submission;
 
+//Should this inherit from polling 
 public class SubmissionDaoImpl implements SubmissionDao{
   Connection connected;
   

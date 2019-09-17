@@ -1,11 +1,6 @@
 package evaluatorSpringBoot.poos;
 
-/*[recap this variable definitions]
-final means that the class can not be inherit and varible can no change value*/
-
 public class Response {
-//[] private but with a getter/. This declaration corresponds to the setter stuff?
-
     //private final long     userId;
     private final long     submissionId;
     public  final String   output;

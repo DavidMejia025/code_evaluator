@@ -1,0 +1,26 @@
+DAO
+  http://allenbrowne.com/func-DAO.html
+  http://allenbrowne.com/func-DDL.html
+
+DATA POOL
+  https://www.digitalocean.com/community/tutorials/managed-databases-connection-pools-and-postgresql-benchmarking-using-pgbench
+  https://severalnines.com/database-blog/scaling-connections-postgresql-using-connection-pooling
+  https://dzone.com/articles/understanding-postgres-connection-pooling-with-pgb
+
+Postgress:
+  PGClient
+    https://www.julienviet.com/reactive-pg-client/guide/java/
+  JDBC:
+    Official driver doc:
+      https://jdbc.postgresql.org/documentation/head/connect.html
+
+    http://zetcode.com/java/postgresql/
+    https://www.mkyong.com/jdbc/how-do-connect-to-postgresql-with-jdbc-driver-java/
+    https://docs.yugabyte.com/v1.2/quick-start/build-apps/java/ysql-jdbc/
+    https://www.baeldung.com/java-dao-pattern
+    https://examples.javacodegeeks.com/core-java/sql/java-jdbc-postgresql-connection-example/
+
+    DataSource
+      https://www.postgresql.org/docs/7.4/jdbc-datasource.html
+      https://jdbc.postgresql.org/documentation/head/ds-ds.html
+      https://www.postgresql.org/docs/7.3/jdbc-datasource.html

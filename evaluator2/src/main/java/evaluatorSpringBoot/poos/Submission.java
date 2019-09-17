@@ -4,7 +4,6 @@ package evaluatorSpringBoot.poos;
 final means that the class can not be inherit and varible can no change value*/
 
 public class Submission {
-//[] private but with a getter/. This declaration corresponds to the setter stuff?
 	enum Statuses {
  	   received,
  	   queue,

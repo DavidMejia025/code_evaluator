@@ -1,9 +1,9 @@
 package evaluatorSpringBoot.dao;
 
-import java.util.List;
-
-import evaluatorSpringBoot.poos.Submission;
+import evaluatorSpringBoot.poos.ConnectionDataSource;
 
 public interface PoollingDataSource {
-  public List<Submission> sql(String sql);
+  public ConnectionDataSource getConnection();
+  
+  public void closeConnection();
 }
