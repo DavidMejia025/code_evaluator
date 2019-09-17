@@ -13,13 +13,14 @@ import org.json.JSONObject;
 
 import com.google.common.io.Files;
 
+import evaluatorSpringBoot.dao.DaoTest;
 import evaluatorSpringBoot.docker.MyDockerClientImpl;
 import evaluatorSpringBoot.poos.Response;
 import evaluatorSpringBoot.poos.Submission;
 
 public class CodeEvaluatorImpl  implements CodeEvaluator {
-	private final String basePath   = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/submissions/";
-	private final String stdoutPath = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/submissions/documents/stdout_test.rb";
+	private final String basePath   = "submissions/";
+	private final String stdoutPath = "submissions/documents/stdout_test.rb";
 
 	private String params;
 	
@@ -40,9 +41,11 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 		//Post process?
 		cleanTest(newSubmission);
 		
-        return submissionResult;
+		DaoTest.testSumbisionDao();
+		
+    return submissionResult;
     }
-	
+
 	private void prepareTest(Submission newSubmission) throws IOException{
 		createSubmissionFolder(newSubmission);
 		

@@ -17,7 +17,7 @@ public interface MyDockerClient {
 	
 	String getLogs(String containerId);
 	
-    String getImageId(DockerClient client, String method);
+  String getImageId(DockerClient client, String method);
 	
 	void pullImage(DockerClient client, String name);
 	

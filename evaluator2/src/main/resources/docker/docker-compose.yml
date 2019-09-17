@@ -1,0 +1,46 @@
+version: '2.2'
+
+services:
+  database:
+    image: "postgres:9"
+    networks:
+      - eng
+    ports:
+      - "5433:5432"
+    volumes:
+       - db-data:/var/lib/postgresql/data
+    restart: "always"
+
+networks:
+  eng:
+volumes:
+  db-data:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -13,14 +13,14 @@ public class Submission {
  	   completed
     }
 	
-    private final int     submissionId;
-    private final int     userId = 0;
-    private final Statuses status;
-    public  final String   code;
-    public  String         stdoutPath = "";
+    private int      submissionId;
+    private int      userId = 2;
+    private Statuses status;
+    public  String   code;
+    public  String   stdoutPath = "";
     //private final String language = "ruby";
-    private final Response result; 
-    private final int      exitCode = 200;  
+    private Response result; 
+    private int      exitCode = 200;   
 
     public Submission(String code) {  
         this.submissionId = createSubmissionId(code);
@@ -32,9 +32,17 @@ public class Submission {
     public int getSubmissionId() {
         return submissionId;
     }
+    
+    public int getUserId() {
+      return userId;
+    }
 
     public String getCode() {
         return code;
+    }
+    
+    public Statuses getStatus() {
+      return status;
     }
 
     public int getExitCode() {
@@ -42,7 +50,7 @@ public class Submission {
     }
     
     private int createSubmissionId(String code) {
-    	return 1;
+    	return 2;
     }
     
     public 	String getStdoutPath() {
@@ -51,5 +59,25 @@ public class Submission {
     
     public void setStdoutPath(String stdoutPath) {
     	this.stdoutPath = stdoutPath;
+    }
+    
+    public void setSubmissionId(int id) {
+      this.submissionId = id;
+    }
+    
+    public void setUserId(int id) {
+      this.userId = id;
+    }
+  
+    public void setCode(String code) {
+      this.code = code;
+    }
+    
+    public void setStatus(Statuses status) {
+      this.status = status;
+    }
+  
+    public void setExitCode(int code) {
+      this.exitCode = code;
     }
 }

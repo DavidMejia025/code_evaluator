@@ -26,10 +26,11 @@ public class MyDockerClientImpl implements MyDockerClient {
 	//private final String volume_path    = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2";
 	//private final String dockerFilePath = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/src/main/resources/docker/Dockerfile";
 	private final String volume_path    = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2";
-	private final String dockerFilePath = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/src/main/resources/docker/Dockerfile";
+	private final String dockerFilePath = "src/main/resources/docker/Dockerfile";
+	
 	public String imageId;
-	public String containerId;
-	public DockerClient client;
+	public String containerId; 
+	public DockerClient client; 
 	
 	public MyDockerClientImpl() {
 		this.client = DockerClientBuilder.getInstance().build();
