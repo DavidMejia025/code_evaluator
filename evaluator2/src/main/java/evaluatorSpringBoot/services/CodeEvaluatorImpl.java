@@ -13,10 +13,10 @@ import org.json.JSONObject;
 
 import com.google.common.io.Files;
 
-import evaluatorSpringBoot.dao.DaoTest;
 import evaluatorSpringBoot.docker.MyDockerClientImpl;
-import evaluatorSpringBoot.poos.Response;
-import evaluatorSpringBoot.poos.Submission;
+import evaluatorSpringBoot.persistance.dao.DaoTest;
+import evaluatorSpringBoot.poo.Response;
+import evaluatorSpringBoot.poo.Submission;
 
 public class CodeEvaluatorImpl  implements CodeEvaluator {
 	private final String basePath   = "submissions/";
@@ -33,7 +33,9 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 		String params = parseJson(this.params);
 			
 		Submission newSubmission = new Submission(params);
-
+		
+		//SubmissionDao sDAO = SubmissionDaoFactory.create();
+// persist
 		prepare(newSubmission);
 		
 		Response submissionResult = runTest(newSubmission);

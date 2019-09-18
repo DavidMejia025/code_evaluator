@@ -1,64 +1,24 @@
-package evaluatorSpringBoot.dao;
+package evaluatorSpringBoot.persistance.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import evaluatorSpringBoot.poos.Submission;
+import evaluatorSpringBoot.persistance.PollingDataSourceImpl;
+import evaluatorSpringBoot.poo.ConnectionDataSource;
+import evaluatorSpringBoot.poo.Submission;
 
 //Should this inherit from polling 
-public class SubmissionDaoImpl implements SubmissionDao{
-  Connection connected;
+public class SubmissionPostgresDaoImpl implements SubmissionDao{
+  public  ConnectionDataSource  connection;
+  private PollingDataSourceImpl poollconnection;
+	
+  public SubmissionPostgresDaoImpl(){
+    this.poollconnection = new PollingDataSourceImpl();
+  }
   
-	public SubmissionDaoImpl(){
-	  this.connected = connect();
-	}
-	
-	public Connection connect() {
-    Connection conn = null;
-    try {
-        conn = DriverManager.getConnection(
-            "jdbc:postgresql://127.0.0.1:5432/test_java", "postgres", "123pormi");
-        
-        System.out.println("Connected to the PostgreSQL server successfully.");
-    } catch (SQLException e) {
-        System.out.println(e.getMessage());
-    }
-
-    return conn;
-	}
-	
-	public List<Submission> sql(String sql) {
-	  Submission newSubmission = new Submission("");
-	  List<Submission> submissions = new ArrayList<Submission>();
-	  
-	  try  {
-      PreparedStatement pstmt = this.connected.prepareStatement(sql);
-      ResultSet rs = pstmt.executeQuery();
-      
-      while (rs.next()) {
-        newSubmission.setSubmissionId(Integer.parseInt(rs.getString(1)));
-        newSubmission.setUserId(Integer.parseInt(rs.getString(2)));
-        newSubmission.setCode(rs.getString(4));
-        newSubmission.setExitCode(Integer.parseInt(rs.getString(5)));
-        
-        submissions.add(newSubmission);
-      }
-
-
-     // this.connected.close();
-    } catch (Exception e) {
-      System.err.println("Error: " + e.getMessage());
-    } 
-	  
-    return submissions;
-	}
-	
 	public void create(Submission newSubmission) {
     String insertSubmission = "INSERT INTO submissions (submissionid, userid, status, code, exitcode)" +
                                               " VALUES (" + 
@@ -71,13 +31,16 @@ public class SubmissionDaoImpl implements SubmissionDao{
     System.out.println(insertSubmission);
     
     try  {
-	    this.connected.createStatement().executeUpdate(insertSubmission);
+      this.connection = this.poollconnection.poolConnection();;
+	    this.connection.getConnection().createStatement().executeUpdate(insertSubmission);
 	    System.out.println("Inserted data: " + insertSubmission);
 	    
-	   // this.connected.close();
+	   // this.connection.getConnection().close();
   	} catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
     } 
+    
+    this.connection = this.poollconnection.closeConnection(this.connection);
 	}
 	
 	public Submission find(int submissionId) {
@@ -86,7 +49,8 @@ public class SubmissionDaoImpl implements SubmissionDao{
     System.out.println(findSubmission);
     
     try  {
-      PreparedStatement pstmt = this.connected.prepareStatement(findSubmission);
+      this.connection = this.poollconnection.poolConnection();;
+      PreparedStatement pstmt = this.connection.getConnection().prepareStatement(findSubmission);
       ResultSet rs = pstmt.executeQuery();
       
       while (rs.next()) {
@@ -98,10 +62,13 @@ public class SubmissionDaoImpl implements SubmissionDao{
      
       System.out.println(newSubmission);
 
-     // this.connected.close();
+     // this.connection.getConnection().close();
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
     } 
+    
+    this.connection = this.poollconnection.closeConnection(this.connection);
+    
     return newSubmission;
   }
 	
@@ -112,7 +79,8 @@ public class SubmissionDaoImpl implements SubmissionDao{
     String findSubmission = "SELECT * FROM submissions;";
     
     try  {
-      PreparedStatement pstmt = this.connected.prepareStatement(findSubmission);
+      this.connection = this.poollconnection.poolConnection();;
+      PreparedStatement pstmt = this.connection.getConnection().prepareStatement(findSubmission);
       ResultSet rs = pstmt.executeQuery();
       
       while (rs.next()) {
@@ -126,10 +94,13 @@ public class SubmissionDaoImpl implements SubmissionDao{
      
       System.out.println(submissions);
 
-     // this.connected.close();
+     // this.connection.getConnection().close();
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
     } 
+    
+    this.connection = this.poollconnection.closeConnection(this.connection);
+    
     return submissions;
   }
 	
@@ -145,13 +116,16 @@ public class SubmissionDaoImpl implements SubmissionDao{
     System.out.println(updateSubmission);
     
     try  {
-      this.connected.createStatement().executeUpdate(updateSubmission);
+      this.connection = this.poollconnection.poolConnection();;
+      this.connection.getConnection().createStatement().executeUpdate(updateSubmission);
       System.out.println("Inserted data: " + updateSubmission);
       
-     // this.connected.close();
+     // this.connection.getConnection().close();
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
     } 
+    
+    this.connection = this.poollconnection.closeConnection(this.connection);
   }
 	
 	public Submission findBy(Hashtable<String, Integer> parameters) {
@@ -164,7 +138,8 @@ public class SubmissionDaoImpl implements SubmissionDao{
     System.out.println(findSubmission);
     
     try  {
-      PreparedStatement pstmt = this.connected.prepareStatement(findSubmission);
+      this.connection = this.poollconnection.poolConnection();
+      PreparedStatement pstmt = this.connection.getConnection().prepareStatement(findSubmission);
       ResultSet rs = pstmt.executeQuery();
       
       while (rs.next()) {
@@ -176,10 +151,13 @@ public class SubmissionDaoImpl implements SubmissionDao{
      
       System.out.println(newSubmission);
 
-     // this.connected.close();
+     // this.connection.getConnection().close();
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
     } 
+    
+    this.connection = this.poollconnection.closeConnection(this.connection);
+    
     return newSubmission;
   }
 }

@@ -13,14 +13,13 @@ import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.Image;
-import com.github.dockerjava.api.model.SearchItem;
 import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.github.dockerjava.core.command.PullImageResultCallback;
 
-import evaluatorSpringBoot.poos.Submission;
+import evaluatorSpringBoot.poo.Submission;
 
 public class MyDockerClientImpl implements MyDockerClient {
 	//private final String volume_path    = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2";

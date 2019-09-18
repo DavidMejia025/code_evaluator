@@ -1,13 +1,11 @@
-package evaluatorSpringBoot.dao;
+package evaluatorSpringBoot.persistance.dao;
 
 import java.util.Hashtable;
 import java.util.List;
 
-import evaluatorSpringBoot.poos.Submission;
+import evaluatorSpringBoot.poo.Submission;
 
 public interface SubmissionDao{
-  public List<Submission> sql(String sql);
-  
   public void create(Submission newSubmission);
   
   public void update(Submission newSubmission);

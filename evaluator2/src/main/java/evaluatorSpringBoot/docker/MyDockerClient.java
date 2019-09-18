@@ -2,7 +2,7 @@ package evaluatorSpringBoot.docker;
 
 import com.github.dockerjava.api.DockerClient;
 
-import evaluatorSpringBoot.poos.Submission;
+import evaluatorSpringBoot.poo.Submission;
 
 public interface MyDockerClient {
 	DockerClient buildClient();
