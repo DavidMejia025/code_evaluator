@@ -17,33 +17,34 @@ import evaluatorSpringBoot.api.CodeEvaluator;
 import evaluatorSpringBoot.core.poo.Response;
 import evaluatorSpringBoot.core.poo.Submission;
 import evaluatorSpringBoot.persistance.dao.DaoTest;
+import evaluatorSpringBoot.persistance.dao.SubmissionDao;
+import evaluatorSpringBoot.persistance.dao.SubmissionFactoryDao;
 import evaluatorSpringBoot.services.docker.MyDockerClientImpl;
 
 public class CodeEvaluatorImpl  implements CodeEvaluator {
 	private final String basePath   = "submissions/";
 	private final String stdoutPath = "submissions/documents/stdout_test.rb";
+	private final SubmissionDao submissionDAO;
 
 	private String submissionInput;
 	
 	public CodeEvaluatorImpl(String submissionInput) {
 	  this.submissionInput = submissionInput;
+	  this.submissionDAO   = SubmissionFactoryDao.create();
   }
 	
 	@Override
 	public Response runEval() throws IOException{
-		String params = parseJson(this.submissionInput);
+		String code = parseJson(this.submissionInput);
 			
-		Submission newSubmission = new Submission(this.submissionInput);
+		Submission newSubmission = new Submission(code);
+		this.submissionDAO.create(newSubmission);
 		
-		//SubmissionDao sDAO = SubmissionDaoFactory.create();
-// persist
 		prepare(newSubmission);
 		
 		Response submissionResult = runTest(newSubmission);
 		
 		cleanTest(newSubmission);
-		
-		DaoTest.testSumbisionDao();
 		
     return submissionResult;
     }

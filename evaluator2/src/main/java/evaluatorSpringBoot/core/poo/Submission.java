@@ -1,7 +1,6 @@
 package evaluatorSpringBoot.core.poo;
 
-/*[recap this variable definitions]
-final means that the class can not be inherit and varible can no change value*/
+import java.util.Random;
 
 public class Submission {
 	enum Statuses {
@@ -22,14 +21,14 @@ public class Submission {
     private int      exitCode = 200;   
 
     public Submission(String code) {  
-        this.submissionId = createSubmissionId(code);
-        this.code = code;
-        this.result = new Response(1,code, "");
-        this.status = Statuses.received;
+      this.submissionId = createSubmissionId(code);
+      this.code = code;
+      this.result = new Response(1,code, "");
+      this.status = Statuses.received;
     }
 
     public int getSubmissionId() {
-        return submissionId;
+      return submissionId;
     }
     
     public int getUserId() {
@@ -37,7 +36,7 @@ public class Submission {
     }
 
     public String getCode() {
-        return code;
+      return code;
     }
     
     public Statuses getStatus() {
@@ -45,15 +44,18 @@ public class Submission {
     }
 
     public int getExitCode() {
-        return exitCode;
+      return exitCode;
     }
     
-    private int createSubmissionId(String code) {
-    	return 2;
+    private int createSubmissionId(String code) {  
+      Random rand = new Random();
+      int id = rand.nextInt(200);
+      
+      return this.submissionId = id;
     }
     
     public 	String getStdoutPath() {
-        return stdoutPath;
+      return stdoutPath;
     }
     
     public void setStdoutPath(String stdoutPath) {

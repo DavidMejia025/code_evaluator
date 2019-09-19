@@ -10,8 +10,6 @@ import evaluatorSpringBoot.core.poo.Submission;
 import evaluatorSpringBoot.persistance.PollingDataSourceImpl;
 import evaluatorSpringBoot.persistance.poo.ConnectionDataSource;
 
-
-
 public class SubmissionPostgresDaoImpl implements SubmissionDao{
   private  ConnectionDataSource  connection;
   private  PollingDataSourceImpl poollconnection;
@@ -26,7 +24,7 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
                                                   newSubmission.getSubmissionId() + ", " +
                                                   newSubmission.getUserId() + ", " +
                                                   "'started'" + ", " +
-                                                  newSubmission.getCode() +", "+
+                                                  "'" + newSubmission.getCode() +"', " +
                                                   newSubmission.getExitCode() +
                                                 ");";
     
@@ -35,7 +33,7 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
 	    this.connection.getConnection().createStatement().executeUpdate(insertSubmission);
 	    
   	} catch (Exception e) {
-      System.err.println("Error: " + e.getMessage());
+      System.err.println("Create new submission record Error: " + e.getMessage());
     }finally {  
       if (this.connection != null) {
         leaveConnection();
@@ -87,9 +85,7 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
     } finally {  
-      if (this.connection != null) {
-        leaveConnection();
-      }
+      if (this.connection != null) leaveConnection();
     }
     
     return submissions;
@@ -97,20 +93,20 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
 	
 	public void update(Submission newSubmission) {
     String updateSubmission = "UPDATE submissions SET " +
-                                                  "submissionid = " + newSubmission.getSubmissionId() + ", " +
-                                                  "userid = " + newSubmission.getUserId() + ", " +
-                                                  "status = " + "'started'" + ", " +
-                                                  "code = '" + newSubmission.getCode() +"', "+
-                                                  "exitcode = " + newSubmission.getExitCode() + " " +
+                                                  "submissionid       = " + newSubmission.getSubmissionId() + ", " +
+                                                  "userid             = " + newSubmission.getUserId() + ", " +
+                                                  "status             = " + "'started'" + ", " +
+                                                  "code               = '" + newSubmission.getCode() +"', " +
+                                                  "exitcode           = " + newSubmission.getExitCode() + " " +
                                                   "WHERE submissionid = " + newSubmission.getSubmissionId() +
                                                 ";";
     
     try  {
-      this.connection = this.poollconnection.poolConnection();;
+      this.connection = this.poollconnection.poolConnection();
       this.connection.getConnection().createStatement().executeUpdate(updateSubmission);
       
     } catch (Exception e) {
-      System.err.println("Error: " + e.getMessage());
+      System.err.println("Update submission  " + newSubmission.getSubmissionId() + "  ErrorError: " + e.getMessage());
     } finally {  
       if (this.connection != null) {
         leaveConnection();

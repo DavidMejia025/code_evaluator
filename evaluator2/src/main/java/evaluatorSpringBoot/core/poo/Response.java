@@ -11,20 +11,20 @@ public class Response {
     private final int      exitCode = 200;
 
     public Response(long submissionId, String code, String output) {
-        this.submissionId = submissionId;
-        this.code = code;
-        this.output = output;
+      this.submissionId = submissionId;
+      this.code = code;
+      this.output = output;
     }
 
     public long getsubmissionId() {
-        return submissionId;
+      return submissionId;
     }
 
     public String getOutput() {
-        return output;
+      return output;
     }
 
     public int getExitCode() {
-        return exitCode;
+      return exitCode;
     }
 }
