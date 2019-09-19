@@ -1,4 +1,4 @@
-package evaluatorSpringBoot.poo;
+package evaluatorSpringBoot.persistance.poo;
 
 import java.sql.Connection;
 

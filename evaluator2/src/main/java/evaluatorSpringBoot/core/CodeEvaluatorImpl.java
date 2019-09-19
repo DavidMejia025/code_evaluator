@@ -1,4 +1,4 @@
-package evaluatorSpringBoot.services;
+package evaluatorSpringBoot.core;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,26 +13,27 @@ import org.json.JSONObject;
 
 import com.google.common.io.Files;
 
-import evaluatorSpringBoot.docker.MyDockerClientImpl;
+import evaluatorSpringBoot.api.CodeEvaluator;
+import evaluatorSpringBoot.core.poo.Response;
+import evaluatorSpringBoot.core.poo.Submission;
 import evaluatorSpringBoot.persistance.dao.DaoTest;
-import evaluatorSpringBoot.poo.Response;
-import evaluatorSpringBoot.poo.Submission;
+import evaluatorSpringBoot.services.docker.MyDockerClientImpl;
 
 public class CodeEvaluatorImpl  implements CodeEvaluator {
 	private final String basePath   = "submissions/";
 	private final String stdoutPath = "submissions/documents/stdout_test.rb";
 
-	private String params;
+	private String submissionInput;
 	
-	public CodeEvaluatorImpl(String params) {
-	  this.params = params;
+	public CodeEvaluatorImpl(String submissionInput) {
+	  this.submissionInput = submissionInput;
   }
 	
 	@Override
 	public Response runEval() throws IOException{
-		String params = parseJson(this.params);
+		String params = parseJson(this.submissionInput);
 			
-		Submission newSubmission = new Submission(params);
+		Submission newSubmission = new Submission(this.submissionInput);
 		
 		//SubmissionDao sDAO = SubmissionDaoFactory.create();
 // persist
@@ -49,9 +50,7 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 
 	private void prepare(Submission newSubmission) throws IOException{
 		createSubmissionFolder(newSubmission);
-		
 		createTestFile(newSubmission);
-		
 		copyStdoutFile(newSubmission);
 	}
 	
@@ -67,7 +66,7 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 		
 		Response submissionResult = new Response(1,"some code", dockerLogs);
 		
-		System.out.println(dockerClient.getContainerId());
+		//stop or delete container not implemented yet
 		return submissionResult;
 	}
 	
@@ -88,13 +87,13 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 	
 	private void createSubmissionFolder(Submission newSubmission) { 
 		File newFolder = new File(basePath + Integer.toString(newSubmission.getSubmissionId()));
-        
-    boolean created =  newFolder.mkdir();
     
-    if(created)
-        System.out.println("Folder was created !");
-    else
-        System.out.println("Unable to create folder");
+		//Create a exceotuin here:
+    //try {
+      boolean created =  newFolder.mkdir();
+   // }catch{
+     // System.out.println("Unable to create folder");
+    //}
 	}
 	
 	public void createTestFile(Submission newSubmission) {
@@ -118,14 +117,13 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 	public String readTestFile(Submission newSubmission){
 		String resultUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "result.txt";
 		String result    = "";
-	    String line      = null;
+	  String line      = null;
 	    
 		try {
 	    FileReader fileReader = new FileReader(resultUrl);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 	      
       while((line = bufferedReader.readLine()) != null) {
-          System.out.println(line);
           result += "-----" + line + "-----";
       }  
 	        
@@ -163,7 +161,6 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 			}
 		}
 
-		System.out.println("removing file or directory : " + dir.getName());
 		return dir.delete();
 	}
 	

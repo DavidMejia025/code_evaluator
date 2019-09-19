@@ -1,9 +1,12 @@
 package evaluatorSpringBoot.persistance;
 
-import evaluatorSpringBoot.poo.ConnectionDataSource;
+import evaluatorSpringBoot.persistance.poo.ConnectionDataSource;
 
-public interface PoollingDataSource {
+public interface PoollingDataSource {  
   public ConnectionDataSource poolConnection();
   
-  public ConnectionDataSource closeConnection(ConnectionDataSource connection);
+  public ConnectionDataSource leaveConnection(ConnectionDataSource connection);
+  
+ //I canot reference here the static method
+ //public  PollingDataSourceImpl getInstance();
 }

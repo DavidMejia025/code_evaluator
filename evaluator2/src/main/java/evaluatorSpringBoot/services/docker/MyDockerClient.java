@@ -1,8 +1,7 @@
-package evaluatorSpringBoot.docker;
+package evaluatorSpringBoot.services.docker;
 
 import com.github.dockerjava.api.DockerClient;
-
-import evaluatorSpringBoot.poo.Submission;
+import evaluatorSpringBoot.core.poo.Submission;
 
 public interface MyDockerClient {
 	DockerClient buildClient();

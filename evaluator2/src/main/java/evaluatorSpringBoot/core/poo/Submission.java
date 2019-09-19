@@ -1,4 +1,4 @@
-package evaluatorSpringBoot.poo;
+package evaluatorSpringBoot.core.poo;
 
 /*[recap this variable definitions]
 final means that the class can not be inherit and varible can no change value*/

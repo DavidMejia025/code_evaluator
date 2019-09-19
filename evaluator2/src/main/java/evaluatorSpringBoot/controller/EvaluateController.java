@@ -1,4 +1,4 @@
-package evaluatorSpringBoot.controller;
+  package evaluatorSpringBoot.controller;
 /* Http request:
  * params = {code: "puts 'Hello world from Docker Yeah!!!'"}.to_json
  * headers = {"Content-Type"=>"application/json"}
@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import evaluatorSpringBoot.poo.Response;
-import evaluatorSpringBoot.services.CodeEvaluatorImpl;
+import evaluatorSpringBoot.core.CodeEvaluatorImpl;
+import evaluatorSpringBoot.core.poo.Response;
+
 
 @RestController
 public class EvaluateController {
-  @PostMapping(value = "/cheers", headers="Accept=application/json", consumes = "application/JSON")
+  @PostMapping(value = "/v1", headers="Accept=application/json", consumes = "application/JSON")
   public Response postEvaluate(@RequestBody String params) throws IOException, Exception {
 	  Response newCodeEvaluator =  new CodeEvaluatorImpl(params).runEval();
 	

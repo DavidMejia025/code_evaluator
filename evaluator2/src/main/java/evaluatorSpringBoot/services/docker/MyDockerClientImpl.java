@@ -1,6 +1,4 @@
-package evaluatorSpringBoot.docker;
-//./StarUML-3.1.0-x86_64.AppImage
-//chmod a+x StarUML-3.1.0-x86_64.AppImage
+package evaluatorSpringBoot.services.docker;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,12 +17,11 @@ import com.github.dockerjava.core.command.BuildImageResultCallback;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.github.dockerjava.core.command.PullImageResultCallback;
 
-import evaluatorSpringBoot.poo.Submission;
+import evaluatorSpringBoot.core.poo.Submission;
+import evaluatorSpringBoot.utils.Paths;
 
 public class MyDockerClientImpl implements MyDockerClient {
-	//private final String volume_path    = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2";
-	//private final String dockerFilePath = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/src/main/resources/docker/Dockerfile";
-	private final String volume_path    = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2";
+	private final String volume_path    = Paths.CurrDirectory();
 	private final String dockerFilePath = "src/main/resources/docker/Dockerfile";
 	
 	public String imageId;
@@ -52,17 +49,14 @@ public class MyDockerClientImpl implements MyDockerClient {
 		this.imageId = getImageId(client, "build");
 		
 		Volume volume1    = new Volume("/app");
-        String targetFile = "app" + newSubmission.getStdoutPath(); 
+    String targetFile = "app" + newSubmission.getStdoutPath(); 
         
-	    CreateContainerResponse container = this.client.createContainerCmd(this.imageId)
-			      .withVolumes(volume1)
-			      .withBinds(new Bind(volume_path, volume1))
-			      .withCmd("ruby", targetFile)
-			      .exec();
+    CreateContainerResponse container = this.client.createContainerCmd(this.imageId)
+		      .withVolumes(volume1)
+		      .withBinds(new Bind(volume_path, volume1))
+		      .withCmd("ruby", targetFile)
+		      .exec();
 			      			     
-		System.out.println("create container");
-		System.out.println(targetFile);
-		System.out.println(this.imageId);
 		this.containerId = container.getId();
 	}
 
@@ -74,13 +68,13 @@ public class MyDockerClientImpl implements MyDockerClient {
 
 	@Override
 	public void stopContainer(String containerId) {
-		// TODO Auto-generated method stub
+		//Not implemented yet
 		
 	}
 
 	@Override
 	public void removeContainer(String containerId) {
-		// TODO Auto-generated method stub
+	//Not implemented yet
 		
 	}
 
@@ -88,32 +82,28 @@ public class MyDockerClientImpl implements MyDockerClient {
 	public String getLogs(String containerId){
 		FrameReaderITestCallback collectFramesCallback = new FrameReaderITestCallback();
 	    
-	     try {
+	  try {
 			this.client.logContainerCmd(containerId)
 				  .withFollowStream(true)
 					.withStdOut(true)
 					.withTailAll()
 					.exec(collectFramesCallback).awaitCompletion();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	     
-	     System.out.println(collectFramesCallback.frames);
-	     
-	     return collectFramesCallback.frames.toString();
+     
+    return collectFramesCallback.frames.toString();
 	}
 	
 	public static class FrameReaderITestCallback extends LogContainerResultCallback {
+    public List<Frame> frames = new ArrayList<>();
 
-        public List<Frame> frames = new ArrayList<>();
-
-        @Override
-        public void onNext(Frame item) {
-            frames.add(item);
-            super.onNext(item);
-        }
+    @Override
+    public void onNext(Frame item) {
+        frames.add(item);
+        super.onNext(item);
     }
+  }
 	
 	@Override
 	public String getImageId(DockerClient client, String method) {
@@ -124,7 +114,7 @@ public class MyDockerClientImpl implements MyDockerClient {
 		} else {
 			if (findImageId(this.client, "rubyx") == ""){
 				pullImage(this.client, "ruby:2.5.5");
-		    }
+		  }
 			
 			imageId = findImageId(this.client, "ruby");
 		}
@@ -133,7 +123,7 @@ public class MyDockerClientImpl implements MyDockerClient {
 	}
 	
 	public void pullImage(DockerClient client, String name) {
-		System.out.println(client.pullImageCmd(name).exec(new PullImageResultCallback()));
+		client.pullImageCmd(name).exec(new PullImageResultCallback());
 	}
 	
 	private String findImageId(DockerClient client, String name) {
@@ -145,8 +135,6 @@ public class MyDockerClientImpl implements MyDockerClient {
 			String[] repoTags  = images.get(i).getRepoTags();
 			
 			for (int j = 1; j <= repoTags.length; j++) {
-				System.out.println(repoTags[j-1]);
-				System.out.println(name);
 				Matcher m = regexImage.matcher(repoTags[j-1]);
 				
 				if (m.find()) {
@@ -156,10 +144,8 @@ public class MyDockerClientImpl implements MyDockerClient {
 				}
 			}
 		}
-		//List<SearchItem> dockerSearch = client.searchImagesCmd("alpine").exec();
-		//System.out.println("Search returned" + dockerSearch.toString());
 
-        return imageIdFound;
+    return imageIdFound;
 	}
 	
 	public String buildImage(DockerClient client, String dockerFilePath) {

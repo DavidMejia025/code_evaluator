@@ -1,0 +1,38 @@
+/*
+
+System.out.println(sDAO.getAll());  
+
+Submission newSub = sDAO.find(1);
+
+newSub.setUserId(530);
+
+sDAO.update(newSub);
+
+newSub = sDAO.find(2);
+
+System.out.println(newSub.getUserId()); 
+
+Hashtable<String, Integer>  parameter = new Hashtable<String, Integer>();
+
+parameter.put("userId", 530); 
+
+newSub = sDAO.findBy(parameter);
+
+sDAO.update(newSub);
+
+System.out.println(newSub.getUserId()); 
+System.out.println("end");
+System.out.println(sDAO.sql("SELECT * FROM submissions WHERE userid = 2"));*/
+
+/*
+
+dao comments
+
+  //could be a list of parameter so List<Hashtable>
+  
+  //where(name: 'Spartacus', rating: 4)
+  
+  //findOrCreate(name: 'Spartacus', rating: 4)
+  
+  //findOrCreateBy(name: 'Spartacus', rating: 4)
+*/

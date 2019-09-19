@@ -6,17 +6,18 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import evaluatorSpringBoot.core.poo.Submission;
 import evaluatorSpringBoot.persistance.PollingDataSourceImpl;
-import evaluatorSpringBoot.poo.ConnectionDataSource;
-import evaluatorSpringBoot.poo.Submission;
+import evaluatorSpringBoot.persistance.poo.ConnectionDataSource;
 
-//Should this inherit from polling 
+
+
 public class SubmissionPostgresDaoImpl implements SubmissionDao{
-  public  ConnectionDataSource  connection;
-  private PollingDataSourceImpl poollconnection;
+  private  ConnectionDataSource  connection;
+  private  PollingDataSourceImpl poollconnection;
 	
   public SubmissionPostgresDaoImpl(){
-    this.poollconnection = new PollingDataSourceImpl();
+    this.poollconnection = PollingDataSourceImpl.getInstance();
   }
   
 	public void create(Submission newSubmission) {
@@ -28,78 +29,68 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
                                                   newSubmission.getCode() +", "+
                                                   newSubmission.getExitCode() +
                                                 ");";
-    System.out.println(insertSubmission);
     
     try  {
       this.connection = this.poollconnection.poolConnection();;
 	    this.connection.getConnection().createStatement().executeUpdate(insertSubmission);
-	    System.out.println("Inserted data: " + insertSubmission);
 	    
-	   // this.connection.getConnection().close();
   	} catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
-    } 
-    
-    this.connection = this.poollconnection.closeConnection(this.connection);
+    }finally {  
+      if (this.connection != null) {
+        leaveConnection();
+      }
+    }
 	}
 	
 	public Submission find(int submissionId) {
 	  Submission newSubmission = new Submission("");
     String findSubmission = "SELECT * FROM submissions WHERE submissionid = " + submissionId + ";";
-    System.out.println(findSubmission);
     
     try  {
-      this.connection = this.poollconnection.poolConnection();;
+      this.connection         = this.poollconnection.poolConnection();
       PreparedStatement pstmt = this.connection.getConnection().prepareStatement(findSubmission);
-      ResultSet rs = pstmt.executeQuery();
+      ResultSet rs            = pstmt.executeQuery();
       
       while (rs.next()) {
-        newSubmission.setSubmissionId(Integer.parseInt(rs.getString(1)));
-        newSubmission.setUserId(Integer.parseInt(rs.getString(2)));
-        newSubmission.setCode(rs.getString(4));
-        newSubmission.setExitCode(Integer.parseInt(rs.getString(5)));
+        newSubmission = createPOO(newSubmission, rs);
       }
-     
-      System.out.println(newSubmission);
 
-     // this.connection.getConnection().close();
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
-    } 
-    
-    this.connection = this.poollconnection.closeConnection(this.connection);
+    } finally {  
+      if (this.connection != null) {
+        leaveConnection();
+      }
+    }
     
     return newSubmission;
   }
 	
 	public List<Submission> getAll() {
-    Submission newSubmission = new Submission("");
+    Submission newSubmission     = new Submission("");
     List<Submission> submissions = new ArrayList<Submission>();
     
     String findSubmission = "SELECT * FROM submissions;";
     
     try  {
-      this.connection = this.poollconnection.poolConnection();;
+      this.connection         = this.poollconnection.poolConnection();;
       PreparedStatement pstmt = this.connection.getConnection().prepareStatement(findSubmission);
       ResultSet rs = pstmt.executeQuery();
       
       while (rs.next()) {
-        newSubmission.setSubmissionId(Integer.parseInt(rs.getString(1)));
-        newSubmission.setUserId(Integer.parseInt(rs.getString(2)));
-        newSubmission.setCode(rs.getString(4));
-        newSubmission.setExitCode(Integer.parseInt(rs.getString(5)));
+        newSubmission = createPOO(newSubmission, rs);
         
         submissions.add(newSubmission);
       }
-     
-      System.out.println(submissions);
 
-     // this.connection.getConnection().close();
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
-    } 
-    
-    this.connection = this.poollconnection.closeConnection(this.connection);
+    } finally {  
+      if (this.connection != null) {
+        leaveConnection();
+      }
+    }
     
     return submissions;
   }
@@ -113,19 +104,18 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
                                                   "exitcode = " + newSubmission.getExitCode() + " " +
                                                   "WHERE submissionid = " + newSubmission.getSubmissionId() +
                                                 ";";
-    System.out.println(updateSubmission);
     
     try  {
       this.connection = this.poollconnection.poolConnection();;
       this.connection.getConnection().createStatement().executeUpdate(updateSubmission);
-      System.out.println("Inserted data: " + updateSubmission);
       
-     // this.connection.getConnection().close();
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
-    } 
-    
-    this.connection = this.poollconnection.closeConnection(this.connection);
+    } finally {  
+      if (this.connection != null) {
+        leaveConnection();
+      }
+    }
   }
 	
 	public Submission findBy(Hashtable<String, Integer> parameters) {
@@ -135,29 +125,41 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
     int    val = parameters.get(key);
     
     String findSubmission = "SELECT * FROM submissions WHERE " + key + " = " + val + ";";
-    System.out.println(findSubmission);
     
     try  {
-      this.connection = this.poollconnection.poolConnection();
+      this.connection         = this.poollconnection.poolConnection();
       PreparedStatement pstmt = this.connection.getConnection().prepareStatement(findSubmission);
-      ResultSet rs = pstmt.executeQuery();
+      ResultSet rs            = pstmt.executeQuery();
       
       while (rs.next()) {
-        newSubmission.setSubmissionId(Integer.parseInt(rs.getString(1)));
-        newSubmission.setUserId(Integer.parseInt(rs.getString(2)));
-        newSubmission.setCode(rs.getString(4));
-        newSubmission.setExitCode(Integer.parseInt(rs.getString(5)));
+        newSubmission = createPOO(newSubmission, rs);
       }
-     
-      System.out.println(newSubmission);
-
-     // this.connection.getConnection().close();
+      
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
-    } 
-    
-    this.connection = this.poollconnection.closeConnection(this.connection);
+    } finally {  
+      if (this.connection != null) {
+        leaveConnection();
+      }
+    }
     
     return newSubmission;
   }
+	
+	private Submission createPOO(Submission newSubmission, ResultSet rs) {
+	  try {
+	    newSubmission.setSubmissionId(Integer.parseInt(rs.getString(1)));
+	    newSubmission.setUserId(Integer.parseInt(rs.getString(2)));
+	    newSubmission.setCode(rs.getString(4));
+	    newSubmission.setExitCode(Integer.parseInt(rs.getString(5)));
+	  } catch (Exception e) {
+      System.err.println("Error: " + e.getMessage());
+    }
+	 
+    return newSubmission;
+	}
+	
+	private void leaveConnection() {
+	  this.connection = this.poollconnection.leaveConnection(this.connection);
+	}
 }

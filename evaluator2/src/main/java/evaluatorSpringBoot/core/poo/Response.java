@@ -1,4 +1,4 @@
-package evaluatorSpringBoot.poo;
+package evaluatorSpringBoot.core.poo;
 
 public class Response {
     //private final long     userId;
