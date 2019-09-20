@@ -93,6 +93,7 @@ public class MyDockerClientImpl implements MyDockerClient {
 		}
 	  
     String result = collectFramesCallback.frames.toString().replaceAll("STDOUT: ", "");
+    result        = result.replaceAll("'", "\'");
     
     return result;
 	}
