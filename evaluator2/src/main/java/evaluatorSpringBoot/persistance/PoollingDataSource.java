@@ -2,7 +2,7 @@ package evaluatorSpringBoot.persistance;
 
 import evaluatorSpringBoot.persistance.poo.ConnectionDataSource;
 
-public interface PoollingDataSource {  
+public interface PoollingDataSource {  //Connection pool
   public ConnectionDataSource poolConnection();
   
   public ConnectionDataSource leaveConnection(ConnectionDataSource connection);

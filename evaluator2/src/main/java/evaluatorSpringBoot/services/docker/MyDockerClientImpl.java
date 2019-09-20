@@ -91,8 +91,10 @@ public class MyDockerClientImpl implements MyDockerClient {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-     
-    return collectFramesCallback.frames.toString();
+	  
+    String result = collectFramesCallback.frames.toString().replaceAll("STDOUT: ", "");
+    
+    return result;
 	}
 	
 	public static class FrameReaderITestCallback extends LogContainerResultCallback {

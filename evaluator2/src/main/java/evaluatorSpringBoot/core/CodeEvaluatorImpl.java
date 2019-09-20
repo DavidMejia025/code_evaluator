@@ -13,24 +13,25 @@ import org.json.JSONObject;
 
 import com.google.common.io.Files;
 
-import evaluatorSpringBoot.api.CodeEvaluator;
 import evaluatorSpringBoot.core.poo.Response;
 import evaluatorSpringBoot.core.poo.Submission;
-import evaluatorSpringBoot.persistance.dao.DaoTest;
+import evaluatorSpringBoot.persistance.dao.FactoryDao;
+import evaluatorSpringBoot.persistance.dao.ResponseDao;
 import evaluatorSpringBoot.persistance.dao.SubmissionDao;
-import evaluatorSpringBoot.persistance.dao.SubmissionFactoryDao;
 import evaluatorSpringBoot.services.docker.MyDockerClientImpl;
 
 public class CodeEvaluatorImpl  implements CodeEvaluator {
 	private final String basePath   = "submissions/";
 	private final String stdoutPath = "submissions/documents/stdout_test.rb";
 	private final SubmissionDao submissionDAO;
+	private final ResponseDao   responseDAO;
 
 	private String submissionInput;
 	
 	public CodeEvaluatorImpl(String submissionInput) {
 	  this.submissionInput = submissionInput;
-	  this.submissionDAO   = SubmissionFactoryDao.create();
+	  this.submissionDAO   = FactoryDao.createSubmission(); // string injector can avoid this line of code
+	  this.responseDAO     = FactoryDao.createResponse();
   }
 	
 	@Override
@@ -42,11 +43,14 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 		
 		prepare(newSubmission);
 		
-		Response submissionResult = runTest(newSubmission);
+		String result = runTest(newSubmission);
 		
 		cleanTest(newSubmission);
 		
-    return submissionResult;
+	  Response newResponse = new Response(newSubmission.getSubmissionId(), result, 200);
+	  this.responseDAO.create(newResponse);
+		
+    return newResponse;
     }
 
 	private void prepare(Submission newSubmission) throws IOException{
@@ -55,7 +59,7 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 		copyStdoutFile(newSubmission);
 	}
 	
-	private Response runTest(Submission newSubmission) {
+	private String runTest(Submission newSubmission) {
 		MyDockerClientImpl dockerClient = new MyDockerClientImpl();
 		
 		dockerClient.createContainer(newSubmission);
@@ -63,12 +67,9 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 		
 		String dockerLogs = dockerClient.getLogs(dockerClient.getContainerId());
 		
-		createResultFile(newSubmission, dockerLogs);
+		createResultFile(newSubmission, dockerLogs);;
 		
-		Response submissionResult = new Response(1,"some code", dockerLogs);
-		
-		//stop or delete container not implemented yet
-		return submissionResult;
+		return dockerLogs;
 	}
 	
 	private void cleanTest(Submission newSubmission) {
@@ -79,7 +80,7 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 	}
 	
 	private String parseJson(String json) {
-		JSONObject obj  = new JSONObject(json);
+		JSONObject obj = new JSONObject(json);
 		
 		String jsonParsed = obj.getString("code");
 		
@@ -89,17 +90,12 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 	private void createSubmissionFolder(Submission newSubmission) { 
 		File newFolder = new File(basePath + Integer.toString(newSubmission.getSubmissionId()));
     
-		//Create a exceotuin here:
-    //try {
-      boolean created =  newFolder.mkdir();
-   // }catch{
-     // System.out.println("Unable to create folder");
-    //}
+    boolean created =  newFolder.mkdir();
 	}
 	
 	public void createTestFile(Submission newSubmission) {
 		String fileUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "user_source_code.rb";
-		File new_file   = new File(fileUrl);
+		File new_file  = new File(fileUrl);
 		
 		String code = newSubmission.getCode();
 		
@@ -109,9 +105,9 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
     
   public void createResultFile(Submission newSubmission, String body) {
   	String resultUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "result.txt";
-	File new_file = new File(resultUrl);
-    
-	String fileData = "Result of the code evaluation is \n" + body + "\n"; 
+  	File new_file    = new File(resultUrl);
+      
+  	String fileData = "Result of the code evaluation is \n" + body + "\n"; 
     generateFOS(new_file, fileData);
   }
 	
@@ -135,8 +131,6 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
       }
       catch(IOException ex) {
           System.out.println("Error reading file '" + resultUrl + "'");                  
-          // Or we could just do this: 
-          // ex.printStackTrace();
       }
 		
 		return result;

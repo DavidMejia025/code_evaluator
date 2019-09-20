@@ -1,4 +1,4 @@
-package evaluatorSpringBoot.api;
+package evaluatorSpringBoot.core;
 
 import java.io.IOException;
 import evaluatorSpringBoot.core.poo.Response;

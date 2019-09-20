@@ -19,18 +19,19 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
   }
   
 	public void create(Submission newSubmission) {
-    String insertSubmission = "INSERT INTO submissions (submissionid, userid, status, code, exitcode)" +
-                                              " VALUES (" + 
-                                                  newSubmission.getSubmissionId() + ", " +
-                                                  newSubmission.getUserId() + ", " +
-                                                  "'started'" + ", " +
-                                                  "'" + newSubmission.getCode() +"', " +
-                                                  newSubmission.getExitCode() +
-                                                ");";
+    String insertSubmission = "INSERT INTO submissions (submission_id, user_id, status, code, result_id)" +
+      " VALUES (" + 
+          newSubmission.getSubmissionId() + ", " +
+          newSubmission.getUserId() + ", " +
+          "'started'" + ", " +
+          "'" + newSubmission.getCode() +"', " +
+          newSubmission.getResultId() + ");"; 
     
     try  {
       this.connection = this.poollconnection.poolConnection();;
-	    this.connection.getConnection().createStatement().executeUpdate(insertSubmission);
+	    this.connection.getConnection()
+        .createStatement()
+        .executeUpdate(insertSubmission);
 	    
   	} catch (Exception e) {
       System.err.println("Create new submission record Error: " + e.getMessage());
@@ -43,7 +44,7 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
 	
 	public Submission find(int submissionId) {
 	  Submission newSubmission = new Submission("");
-    String findSubmission = "SELECT * FROM submissions WHERE submissionid = " + submissionId + ";";
+    String findSubmission    = "SELECT * FROM submissions WHERE submissionid = " + submissionId + ";";
     
     try  {
       this.connection         = this.poollconnection.poolConnection();
@@ -93,13 +94,12 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
 	
 	public void update(Submission newSubmission) {
     String updateSubmission = "UPDATE submissions SET " +
-                                                  "submissionid       = " + newSubmission.getSubmissionId() + ", " +
-                                                  "userid             = " + newSubmission.getUserId() + ", " +
-                                                  "status             = " + "'started'" + ", " +
-                                                  "code               = '" + newSubmission.getCode() +"', " +
-                                                  "exitcode           = " + newSubmission.getExitCode() + " " +
-                                                  "WHERE submissionid = " + newSubmission.getSubmissionId() +
-                                                ";";
+      "submission_id       = " + newSubmission.getSubmissionId() + ", " +
+      "user_id             = " + newSubmission.getUserId() + ", " +
+      "status              = " + "'started'" + ", " +
+      "code                = '" + newSubmission.getCode() +"', " +
+      "result_id           = " + newSubmission.getResultId() + " " +
+      "WHERE submissionid  = " + newSubmission.getSubmissionId() +";";
     
     try  {
       this.connection = this.poollconnection.poolConnection();
@@ -147,7 +147,7 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
 	    newSubmission.setSubmissionId(Integer.parseInt(rs.getString(1)));
 	    newSubmission.setUserId(Integer.parseInt(rs.getString(2)));
 	    newSubmission.setCode(rs.getString(4));
-	    newSubmission.setExitCode(Integer.parseInt(rs.getString(5)));
+	    newSubmission.setResultId(Integer.parseInt(rs.getString(5)));
 	  } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
     }

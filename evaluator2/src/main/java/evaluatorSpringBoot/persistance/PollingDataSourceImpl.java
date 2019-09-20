@@ -8,7 +8,7 @@ import java.util.Map;
 
 import evaluatorSpringBoot.persistance.poo.ConnectionDataSource;
 
-
+//conection pool
 public class PollingDataSourceImpl implements PoollingDataSource{
   private static PollingDataSourceImpl       poolInstance;
   private int                                maxConnections;
@@ -29,8 +29,7 @@ public class PollingDataSourceImpl implements PoollingDataSource{
   
   public static PollingDataSourceImpl getInstance() {
     if (poolInstance == null) {
-      System.out.println("Initializing poolsystem");
-      poolInstance =  new PollingDataSourceImpl();
+      poolInstance = new PollingDataSourceImpl();
     } 
     
     return poolInstance;
@@ -48,8 +47,10 @@ public class PollingDataSourceImpl implements PoollingDataSource{
     Connection conn = null;
     
     try {
-    conn = DriverManager.getConnection(
-        "jdbc:postgresql://127.0.0.1:5432/test_java", "postgres", "123pormi");
+    conn = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/code_eval_db",
+        "postgres",
+        "123pormi"
+      );
     
     } catch (SQLException e) {
       System.out.println(e.getMessage());

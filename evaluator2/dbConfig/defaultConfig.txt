@@ -1,0 +1,62 @@
+# handle foreing key
+  assosiations
+  and default role.
+Setup the postgres DB (test env) default configuration.
+
+0. Log in into PG client and create a default role with its corresponding password
+     RUN sudo -u postgres psql
+# default role with password not yet implemented use your own role or the standard posgers.
+1. Create DB:
+     Query for code_eval database.
+       RUN \l
+       if code_eval_db exist does not exist
+         RUN CREATE DATA BASE code_eval_db;
+2. Connect to the new db
+     RUN \c code_eval_db
+3. Clean db Drop all tables
+     List all tables
+       RUN \d
+     loop for all listed tables
+       RUN DROP TABLE {table name}
+4. Verify db has no tables
+     List all tables
+       RUN \d
+     if the output is "Did not find any relations."
+       continue to step 5
+     else
+       go back to step 3.
+5. Create tables
+     RUN CREATE TABLE submissions (
+         submission_id INTEGER PRIMARY KEY NOT NULL,
+         user_id       INTEGER,
+         status        VARCHAR(244),
+         code          TEXT,
+         result_id     INTEGER
+       );
+     RUN CREATE TABLE responses(
+         response_id   INTEGER PRIMARY KEY NOT NULL,
+         submission_id INTEGER,
+         user_id       INTEGER,
+         output        TEXT,
+         exit_code     INTEGER
+       );
+6. Verify that both tables were created inside code_eval_db with the corresponding columns
+     RUN /d;
+                   List of relations
+        Schema |    Name     | Type  |  Owner
+       --------+-------------+-------+----------
+        public | responses   | table | postgres
+        public | submissions | table | postgres
+       (2 rows)
+     RUN SELECT * FROM submissions;
+               submission_id | user_id | status | code | result_id
+       ---------------+---------+--------+------+-----------
+       (0 rows)
+
+     RUN SELECT * FROM responses;
+             response_id | submission_id | user_id | output | exit_code
+       -------------+---------------+---------+--------+-----------
+       (0 rows)
+7. if step 6 was completed successfully now your ready to spin up docker and test the API.
+
+

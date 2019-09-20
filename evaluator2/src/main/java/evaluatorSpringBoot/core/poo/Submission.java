@@ -16,14 +16,11 @@ public class Submission {
     private Statuses status;
     public  String   code;
     public  String   stdoutPath = "";
-    //private final String language = "ruby";
-    private Response result; 
-    private int      exitCode = 200;   
+    private int      resultId = 1;   
 
     public Submission(String code) {  
       this.submissionId = createSubmissionId(code);
       this.code = code;
-      this.result = new Response(1,code, "");
       this.status = Statuses.received;
     }
 
@@ -43,8 +40,8 @@ public class Submission {
       return status;
     }
 
-    public int getExitCode() {
-      return exitCode;
+    public int getResultId() {
+      return resultId;
     }
     
     private int createSubmissionId(String code) {  
@@ -78,7 +75,7 @@ public class Submission {
       this.status = status;
     }
   
-    public void setExitCode(int code) {
-      this.exitCode = code;
+    public void setResultId(int code) {
+      this.resultId = resultId;
     }
 }

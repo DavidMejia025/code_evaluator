@@ -1,30 +1,65 @@
 package evaluatorSpringBoot.core.poo;
 
-public class Response {
-    //private final long     userId;
-    private final long     submissionId;
-    public  final String   output;
-    public  final String   code;
-    //private final long     userId = 123456;
-    //private final String[] status = new String[3];
-    //private final String   language = "ruby";
-    private final int      exitCode = 200;
+import java.util.Random;
 
-    public Response(long submissionId, String code, String output) {
-      this.submissionId = submissionId;
-      this.code = code;
-      this.output = output;
+public class Response {
+    private  int     responseId;
+    private  int     submissionId;
+    public   String  output;
+    private  int     userId;
+    private  int     exitCode;
+
+    public Response(int submissionId, String output, int exitCode ) {
+      this.responseId    = createResponseId();
+      this.submissionId  = submissionId;
+      this.output        = output;
+      this.exitCode      = exitCode; 
     }
 
-    public long getsubmissionId() {
+    public int getResponseId() {
+      return responseId;
+    }
+    
+    public int getSubmissionId() {
       return submissionId;
     }
-
+    
+    public int getUserId() {
+      return userId;
+    }
+    
     public String getOutput() {
       return output;
     }
 
     public int getExitCode() {
       return exitCode;
+    }
+    
+    public void setResponseId(int id) {
+      this.responseId = id;
+    }
+    
+    public void setSubmissionId(int submissionId) {
+       this.submissionId = submissionId;
+    }
+    
+    public void setUserId(int userId) {
+      this.userId = userId;
+    }
+    
+    public void setOutput(String output) {
+      this.output = output ;
+    }
+
+    public void setExitCode(int exitCode) {
+      this.exitCode = exitCode;
+    }
+    
+    private int createResponseId() {
+      Random rand = new Random();
+      int id = rand.nextInt(200);
+      
+      return id;
     }
 }
