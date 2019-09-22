@@ -21,8 +21,8 @@ import evaluatorSpringBoot.persistance.dao.SubmissionDao;
 import evaluatorSpringBoot.services.docker.MyDockerClientImpl;
 
 public class CodeEvaluatorImpl  implements CodeEvaluator {
-	private final String basePath   = "submissions/";
-	private final String stdoutPath = "submissions/documents/stdout_test.rb";
+	private final String        basePath   = "submissions/";
+	private final String        stdoutPath = "submissions/documents/stdout_test.rb";
 	private final SubmissionDao submissionDAO;
 	private final ResponseDao   responseDAO;
 
@@ -39,16 +39,18 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 		String code = parseJson(this.submissionInput);
 			
 		Submission newSubmission = new Submission(code);
-		this.submissionDAO.create(newSubmission);
+		//this.submissionDAO.create(newSubmission);
 		
 		prepare(newSubmission);
 		
 		String result = runTest(newSubmission);
 		
 		cleanTest(newSubmission);
-		
+
 	  Response newResponse = new Response(newSubmission.getSubmissionId(), result, 200);
 	  this.responseDAO.create(newResponse);
+	  
+	  this.submissionDAO.create(newSubmission);
 		
     return newResponse;
     }
@@ -96,7 +98,8 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 	public void createTestFile(Submission newSubmission) {
 		String fileUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "user_source_code.rb";
 		File new_file  = new File(fileUrl);
-		
+		System.out.println("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		System.out.println(fileUrl);
 		String code = newSubmission.getCode();
 		
     String fileData = "def test;" + code + ";"+ "end";

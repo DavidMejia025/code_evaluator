@@ -24,7 +24,7 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
           newSubmission.getSubmissionId() + ", " +
           newSubmission.getUserId() + ", " +
           "'started'" + ", " +
-          "'" + newSubmission.getCode() +"', " +
+          "'" + newSubmission.getCode().replace("'", "") +"', " +
           newSubmission.getResultId() + ");"; 
     
     try  {
@@ -97,7 +97,7 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
       "submission_id       = " + newSubmission.getSubmissionId() + ", " +
       "user_id             = " + newSubmission.getUserId() + ", " +
       "status              = " + "'started'" + ", " +
-      "code                = '" + newSubmission.getCode() +"', " +
+      "code                = '" + newSubmission.getCode().replace("'", "") +"', " +
       "result_id           = " + newSubmission.getResultId() + " " +
       "WHERE submissionid  = " + newSubmission.getSubmissionId() +";";
     

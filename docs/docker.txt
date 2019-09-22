@@ -5,11 +5,21 @@ Docker Images
 Docker composer
 
 docker volumes
+  https://www.lewuathe.com/changing-the-volume-within-dockerfile.html
   https://rominirani.com/docker-tutorial-series-part-7-data-volumes-93073a1b5b72
   https://blog.container-solutions.com/understanding-volumes-docker
   Bind
     https://dockertips.com/volumenes
   https://www.ionos.com/community/server-cloud-infrastructure/docker/understanding-and-managing-docker-container-volumes/
-
+ 
 The life cycle of a docker container.
 https://medium.com/@nagarwal/lifecycle-of-docker-container-d2da9f85959
+
+ENTRY POINT/ CMD
+  https://www.ctl.io/developers/blog/post/dockerfile-entrypoint-vs-cmd/
+
+
+RUN APP inside docker container:
+  https://www.callicoder.com/spring-boot-docker-example/
+  https://stackabuse.com/dockerizing-a-spring-boot-application/
+  https://github.com/spotify/dockerfile-maven

@@ -1,0 +1,53 @@
+Kubernetis:
+  Kubernetis is a development from Google that supports the spin up and administration of containers for deploy applcations. 15 years ago
+  google faced the challenge of orchestraiting thousands or millions (today 2 billion containers per week) of containers so they create Borg the precursor of Kubernetis.
+
+  Kubernetis is a software that allows anyone to deploy an application under a virtual machine that supports a single or multiple containers.
+  In kubernetis you can have clusters of VM that configure and operate the spin up and execution of containers depending on performance
+  requirements. Each closter is compromise of different pods  which are units that runs a set of common containers. A Kubernetes Pod is a group of one or more Containers, tied together for the purposes of administration and networking [1].
+
+  "What can Kubernetes do for you?
+With modern web services, users expect applications to be available 24/7, and developers expect to deploy new versions of those applications several times a day. Containerization helps package software to serve these goals, enabling applications to be released and updated in an easy and fast way without downtime. Kubernetes helps you make sure those containerized applications run where and when you want, and helps them find the resources and tools they need to work. Kubernetes is a production-ready, open source platform designed with Google's accumulated experience in container orchestration, combined with best-of-breed ideas from the community." [2].
+
+  CLusters:
+    "A Kubernetes cluster consists of two types of resources:
+
+    The Master coordinates the cluster
+    Nodes are the workers that run applications
+    Kubernetes is a production-grade, open-source platform that orchestrates the placement (scheduling) and execution of application containers within and across computer clusters."  [2].
+
+  Kubernetes Deployments
+    "Once you have a running Kubernetes cluster, you can deploy your containerized applications on top of it. To do so, you create a Kubernetes Deployment configuration. The Deployment instructs Kubernetes how to create and update instances of your application. Once you've created a Deployment, the Kubernetes master schedules mentioned application instances onto individual Nodes in the cluster." [6].
+
+  For offline implementation use minikube. all info available in [3-4]. Minikube implements a VM where you can launch a kubernetes cluster. It is necessary to allow VM in your local computer and download either virtual box or KVM and conigure it as default vm in minikube. [7]
+Further work
+  https://developer.ibm.com/patterns/deploy-java-microservices-on-kubernetes-with-polyglot-support/
+
+  Services:
+    The way to expose the node or pod outside the local kubernetes network.
+
+    A Service in Kubernetes is an abstraction which defines a logical set of Pods and a policy by which to access them. Services enable a loose coupling between dependent Pods. A Service is defined using YAML (preferred) or JSON, like all Kubernetes objects. The set of Pods targeted by a Service is usually determined by a LabelSelector (see below for why you might want a Service without including selector in the spec).
+
+    Although each Pod has a unique IP address, those IPs are not exposed outside the cluster without a Service. Services allow your applications to receive traffic. Services can be exposed in different ways by specifying a type in the ServiceSpec:
+
+    ClusterIP (default) - Exposes the Service on an internal IP in the cluster. This type makes the Service only reachable from within the cluster.
+    NodePort - Exposes the Service on the same port of each selected Node in the cluster using NAT. Makes a Service accessible from outside the cluster using <NodeIP>:<NodePort>. Superset of ClusterIP.
+    LoadBalancer - Creates an external load balancer in the current cloud (if supported) and assigns a fixed, external IP to the Service. Superset of NodePort.
+    ExternalName - Exposes the Service using an arbitrary name (specified by externalName in the spec) by returning a CNAME record with the name. No proxy is used. This type requires v1.7 or higher of kube-dns.
+
+
+Further courses
+  Short term
+    https://kubernetes.io/docs/tutorials/kubernetes-basics/scale/scale-intro/
+
+  https://www.coursera.org/learn/google-kubernetes-engine  6h
+  https://linuxacademy.com/course/amazon-eks-deep-dive/
+
+References:
+  1. https://kubernetes.io/docs/tutorials/hello-minikube/
+  2. https://kubernetes.io/docs/tutorials/kubernetes-basics/
+  3. https://kubernetes.io/docs/setup/learning-environment/minikube/
+  4. https://computingforgeeks.com/how-to-run-minikube-on-kvm/
+  5. https://www.redhat.com/es/topics/containers/what-is-kubernetes
+  6. https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-intro/
+  7. https://kubernetes.io/docs/setup/learning-environment/minikube/

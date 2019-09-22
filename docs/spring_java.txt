@@ -1,2 +1,13 @@
 Annotations
   https://dzone.com/articles/creating-custom-annotations-in-java
+
+
+run project
+  stand alone
+    in the root file:
+      mvn spring-boot:run
+    With the jar file
+      Create jar package
+        mvn package
+      Run jar file
+        java -jar target/xxxxx.jar

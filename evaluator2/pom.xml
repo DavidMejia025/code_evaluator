@@ -77,9 +77,38 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+			    <configuration>
+			        <finalName>evaluator2-1.0.0</finalName>
+			    </configuration>
             </plugin>
+            <plugin>
+			  <groupId>com.spotify</groupId>
+			  <artifactId>dockerfile-maven-plugin</artifactId>
+			  <version>1.4.9</version>
+			  <executions>
+			    <execution>
+			      <id>default</id>
+			      <goals>
+			        <goal>build</goal>
+			        <goal>push</goal>
+			      </goals>
+			    </execution>
+			  </executions>
+			  <configuration>
+			    <repository>code_evaluator</repository>
+			    <tag>1.0.5</tag>
+			    <buildArgs>
+			      <JAR_FILE>app.jar</JAR_FILE>
+			    </buildArgs>
+			  </configuration>
+			</plugin>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-deploy-plugin</artifactId>
+			    <configuration>
+			        <skip>true</skip>
+			    </configuration>
+			</plugin>
         </plugins>
     </build>
-  
-  
 </project>

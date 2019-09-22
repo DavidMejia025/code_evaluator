@@ -1,0 +1,1 @@
+def test;'I got a really good offer from  DRUO and I accept it';end
