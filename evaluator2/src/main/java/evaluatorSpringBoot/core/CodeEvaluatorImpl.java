@@ -10,36 +10,44 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.json.JSONObject;
+import org.jvnet.hk2.annotations.Service;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.google.common.io.Files;
 
+import evaluatorSpringBoot.Config;
 import evaluatorSpringBoot.core.poo.Response;
 import evaluatorSpringBoot.core.poo.Submission;
-import evaluatorSpringBoot.persistance.dao.FactoryDao;
 import evaluatorSpringBoot.persistance.dao.ResponseDao;
 import evaluatorSpringBoot.persistance.dao.SubmissionDao;
 import evaluatorSpringBoot.services.docker.MyDockerClientImpl;
 
+@Service
 public class CodeEvaluatorImpl  implements CodeEvaluator {
 	private final String        basePath   = "submissions/";
-	private final String        stdoutPath = "submissions/documents/stdout_test.rb";
-	private final SubmissionDao submissionDAO;
-	private final ResponseDao   responseDAO;
+	private final String        stdoutFilePath = "submissions/documents/stdout_test.rb";
+	ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+	
+	private  SubmissionDao submissionDAO;
+	private  ResponseDao   responseDAO;
 
 	private String submissionInput;
 	
 	public CodeEvaluatorImpl(String submissionInput) {
 	  this.submissionInput = submissionInput;
-	  this.submissionDAO   = FactoryDao.createSubmission(); // string injector can avoid this line of code
-	  this.responseDAO     = FactoryDao.createResponse();
+	  //this.submissionDAO   = FactoryDao.createSubmission(); // string injector can avoid this line of code
+	  //this.responseDAO     = FactoryDao.createResponse();
   }
 	
 	@Override
 	public Response runEval() throws IOException{
 		String code = parseJson(this.submissionInput);
-			
+
+		submissionDAO = context.getBean(SubmissionDao.class);
+		
 		Submission newSubmission = new Submission(code);
-		//this.submissionDAO.create(newSubmission);
+		submissionDAO.create(newSubmission);
 		
 		prepare(newSubmission);
 		
@@ -48,9 +56,10 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 		cleanTest(newSubmission);
 
 	  Response newResponse = new Response(newSubmission.getSubmissionId(), result, 200);
-	  this.responseDAO.create(newResponse);
+	  responseDAO = context.getBean(ResponseDao.class);
+	  responseDAO.create(newResponse);
 	  
-	  this.submissionDAO.create(newSubmission);
+	  //this.submissionDAO.create(newSubmission);
 		
     return newResponse;
     }
@@ -90,13 +99,13 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 	}
 	
 	private void createSubmissionFolder(Submission newSubmission) { 
-		File newFolder = new File(basePath + Integer.toString(newSubmission.getSubmissionId()));
+		File newFolder = new File(basePath + Integer.toString(newSubmission.getSubmissionId())); //DONT REPEAT YOURSELG BE CAREFUL
     
     boolean created =  newFolder.mkdir();
 	}
 	
 	public void createTestFile(Submission newSubmission) {
-		String fileUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "user_source_code.rb";
+		String fileUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "user_source_code.rb";  //DONT REPEAT YOURSELG BE CAREFUL
 		File new_file  = new File(fileUrl);
 
 		String code = newSubmission.getCode();
@@ -106,7 +115,7 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
   }
     
   public void createResultFile(Submission newSubmission, String body) {
-  	String resultUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "result.txt";
+  	String resultUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "result.txt";  //DONT REPEAT YOURSELG BE CAREFUL
   	File new_file    = new File(resultUrl);
       
   	String fileData = "Result of the code evaluation is \n" + body + "\n"; 
@@ -114,7 +123,7 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
   }
 	
 	public String readTestFile(Submission newSubmission){
-		String resultUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "result.txt";
+		String resultUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "result.txt";  //DONT REPEAT YOURSELG BE CAREFUL
 		String result    = "";
 	  String line      = null;
 	    
@@ -139,7 +148,7 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 	}
 	
 	private void copyStdoutFile(Submission newSubmission) throws IOException{
-		String from = stdoutPath;
+		String from = stdoutFilePath;
 		String to   = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "stdout_test.rb";
 		
 		Path srcFilePath  = Paths.get(from);

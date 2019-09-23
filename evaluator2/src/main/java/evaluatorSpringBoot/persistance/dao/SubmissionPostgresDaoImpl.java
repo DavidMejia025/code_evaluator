@@ -6,14 +6,20 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.jvnet.hk2.annotations.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import evaluatorSpringBoot.core.poo.Submission;
 import evaluatorSpringBoot.persistance.PollingDataSourceImpl;
 import evaluatorSpringBoot.persistance.poo.ConnectionDataSource;
-
+@Service 
+@Component
 public class SubmissionPostgresDaoImpl implements SubmissionDao{
   private  ConnectionDataSource  connection;
   private  PollingDataSourceImpl poollconnection;
-	
+  
+  @Autowired
   public SubmissionPostgresDaoImpl(){
     this.poollconnection = PollingDataSourceImpl.getInstance();
   }

@@ -49,12 +49,13 @@ public class MyDockerClientImpl implements MyDockerClient {
 		this.imageId = getImageId(client, "build");
 		
 		Volume volume1    = new Volume("/app");
-    String targetFile = "/app" + newSubmission.getStdoutPath(); 
+    //String targetFile = "/app" + newSubmission.getStdoutPath(); 
+    String targetFile = "stdout_test.rb"; 
 
-    CreateContainerResponse container = this.client.createContainerCmd(this.imageId)
+    CreateContainerResponse container = this.client.createContainerCmd("121862ceb25f")
 		      .withVolumes(volume1)
 		      .withBinds(new Bind(volume_path, volume1))
-          .withCmd("ruby", targetFile)
+          .withCmd("/bin/ls", "/app")
 		      .exec();
     System.out.println("Get container.getId()///.......................................///");
     System.out.println(container.getId());
@@ -124,7 +125,8 @@ public class MyDockerClientImpl implements MyDockerClient {
 			
 			imageId = findImageId(this.client, "ruby");
 		}
-		
+		System.out.println("Get image id///.......................................///");
+		System.out.println(imageId);
 		return imageId;
 	}
 	

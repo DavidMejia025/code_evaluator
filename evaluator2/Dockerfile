@@ -11,8 +11,11 @@ MAINTAINER David Mejia <davidndy@gmail.com>
 #ADD target/${JAR_FILE} /usr/share/app/app.jar
 #ARG JAR_FILE
 
+COPY . /codeEvaluator
 
-COPY . /
 EXPOSE 8080
+
 RUN  ls
-ENTRYPOINT ["java","-jar","/target/evaluator2-1.0.0.jar"]
+RUN  ls codeEvaluator/
+
+ENTRYPOINT ["java","-jar","codeEvaluator/target/evaluator2-1.0.0.jar"]
