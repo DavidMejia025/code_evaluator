@@ -98,8 +98,7 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 	public void createTestFile(Submission newSubmission) {
 		String fileUrl = basePath + Integer.toString(newSubmission.getSubmissionId()) + "/" + "user_source_code.rb";
 		File new_file  = new File(fileUrl);
-		System.out.println("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-		System.out.println(fileUrl);
+
 		String code = newSubmission.getCode();
 		
     String fileData = "def test;" + code + ";"+ "end";

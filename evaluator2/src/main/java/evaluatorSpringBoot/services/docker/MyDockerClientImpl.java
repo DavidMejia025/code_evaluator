@@ -49,15 +49,15 @@ public class MyDockerClientImpl implements MyDockerClient {
 		this.imageId = getImageId(client, "build");
 		
 		Volume volume1    = new Volume("/app");
-    String targetFile = "app" + newSubmission.getStdoutPath(); 
+    String targetFile = "/app" + newSubmission.getStdoutPath(); 
 
     CreateContainerResponse container = this.client.createContainerCmd(this.imageId)
 		      .withVolumes(volume1)
 		      .withBinds(new Bind(volume_path, volume1))
           .withCmd("ruby", targetFile)
-          //.withCmd("docker", "--version")
 		      .exec();
-          			     
+    System.out.println("Get container.getId()///.......................................///");
+    System.out.println(container.getId());
 		this.containerId = container.getId();
 	}
 
@@ -95,7 +95,7 @@ public class MyDockerClientImpl implements MyDockerClient {
 	  
     String result = collectFramesCallback.frames.toString().replaceAll("STDOUT: ", "");
     result        = result.replaceAll("'", "\'");
-    
+    System.out.println("Get logs ///.......................................///");
     System.out.println(result);
     
     return result;

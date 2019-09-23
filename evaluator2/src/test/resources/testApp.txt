@@ -1,0 +1,18 @@
+Basic step to start testing the code evaluator
+  mvn package
+  run app outside docker
+    java -jar  target/evaluator2-1.0.0.jar
+  run app inside docker
+    docker run --privileged=true -v /var/run/docker.sock:/var/run/docker.sock  -p 8080:8080 code_evaluator:1.0.5 -it
+  prepare HTTP request
+    Using CURL
+
+    Using HTTParty
+      irb
+      require 'httparty'
+      > headers  = {"content-type":"application/json"}
+      > params   = {code: "'I got a really good offer from  DRUO and I accept it'"}.to_json
+      > response = HTTParty.post('http://localhost:8080/v1', body: params, headers: headers)
+
+
+
