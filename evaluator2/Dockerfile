@@ -11,6 +11,8 @@ MAINTAINER David Mejia <davidndy@gmail.com>
 #ADD target/${JAR_FILE} /usr/share/app/app.jar
 #ARG JAR_FILE
 
+#VOLUME pwd /codeEvaluator
+
 COPY . /codeEvaluator
 
 EXPOSE 8080

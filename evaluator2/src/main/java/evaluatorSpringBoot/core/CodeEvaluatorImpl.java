@@ -25,8 +25,8 @@ import evaluatorSpringBoot.services.docker.MyDockerClientImpl;
 
 @Service
 public class CodeEvaluatorImpl  implements CodeEvaluator {
-	private final String        basePath   = "submissions/";
-	private final String        stdoutFilePath = "submissions/documents/stdout_test.rb";
+	private final String        basePath   = "/codeEvaluator/submissions/";
+	private final String        stdoutFilePath = "/codeEvaluator/submissions/documents/stdout_test.rb";
 	ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
 	
 	private  SubmissionDao submissionDAO;
