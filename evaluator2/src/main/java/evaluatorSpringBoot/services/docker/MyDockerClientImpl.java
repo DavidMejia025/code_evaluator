@@ -22,7 +22,7 @@ import evaluatorSpringBoot.utils.Paths;
 
 public class MyDockerClientImpl implements MyDockerClient {
 	private final String volume_path    = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2";
-	private final String dockerFilePath = "/codeEvaluator/src/main/resources/docker/Dockerfile";
+	private final String dockerFilePath = "src/main/resources/docker/Dockerfile";
 	
 	public String imageId;
 	public String containerId; 
@@ -49,16 +49,14 @@ public class MyDockerClientImpl implements MyDockerClient {
 		this.imageId = getImageId(client, "build");
 		
 		Volume volume1    = new Volume("/app");
-    //String targetFile = "/app" + newSubmission.getStdoutPath(); 
-    String targetFile = "app/"+"stdout_test.rb"; 
+    String targetFile = "/app" + newSubmission.getStdoutPath(); 
 
     CreateContainerResponse container = this.client.createContainerCmd("121862ceb25f")
 		      .withVolumes(volume1)
 		      .withBinds(new Bind(volume_path, volume1))
           .withCmd("ruby", targetFile)
 		      .exec();
-    System.out.println("Get container.getId()///.......................................///");
-    System.out.println(container.getId());
+
 		this.containerId = container.getId();
 	}
 

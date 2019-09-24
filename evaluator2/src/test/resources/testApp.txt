@@ -11,7 +11,7 @@ Basic step to start testing the code evaluator
       irb
       require 'httparty'
       > headers  = {"content-type":"application/json"}
-      > params   = {code: "'I got a really good offer from  DRUO and I accept it'"}.to_json
+      > params   = {code: "'hELLO wORLD'"}.to_json
       > response = HTTParty.post('http://localhost:8080/v1', body: params, headers: headers)
 
 
