@@ -26,3 +26,7 @@ RUN APP inside docker container:
 
   Important for debuggin inside docker:
     https://medium.com/@oprearocks/how-to-properly-override-the-entrypoint-using-docker-run-2e081e5feb9d
+
+  Useful comands
+    docer run  interactive -v volume from:to (bind) -p port from:to  image name cmd bash
+    docker run -ti -v /var/run/docker.sock:/var/run/docker.sock -p 8080:8080 code_evaluator:1.0.5 bash

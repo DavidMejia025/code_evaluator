@@ -1,0 +1,2 @@
+Result of the code evaluation is 
+[STDERR: ruby: No such file or directory -- /app/codeEvaluator/submissions/151/stdout_test.rb (LoadError)]

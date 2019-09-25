@@ -26,7 +26,7 @@ import evaluatorSpringBoot.services.LogSystem;
 
 public class MyDockerClientImpl implements MyDockerClient {
   private ApplicationContext context  = new AnnotationConfigApplicationContext(Config.class);
-	private final String volume_path    = "/codeEvaluator";
+	private final String volume_path    = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/submissions";
 	private final String dockerFilePath = "/codeEvaluator/src/main/resources/docker/Dockerfile";
 
 	private String       imageId;
@@ -55,11 +55,11 @@ public class MyDockerClientImpl implements MyDockerClient {
 	public void createContainer(Submission newSubmission) {
 		this.imageId = getImageId(client, "build");
 
-    String targetFile = "/app" + newSubmission.getStdoutPath();
+    String targetFile = "/app/submissions/" + newSubmission.getStdoutPath();
 
     CreateContainerResponse container = this.client.createContainerCmd(this.imageId)
-      .withBinds(new Bind(volume_path, new Volume("/app")))
-      .withCmd("bin/ls", "/app")
+      .withBinds(new Bind(volume_path, new Volume("/app/submissions")))
+      .withCmd("ruby", targetFile)
       .exec();
 
 		this.containerId = container.getId();

@@ -1,17 +1,11 @@
 FROM openjdk:8-jre
 
 MAINTAINER David Mejia <davidndy@gmail.com>
+VOLUME /david
 
-#VOLUME /tmp
-#ENTRYPOINT ["/usr/bin/java", "-jar", "/usr/share/app/app.jar"]
-# Add Maven dependencies (not shaded into the artifact; Docker-cached)
-#ADD target/lib           /usr/share/app/lib
-# Add the service itself
-#ARG JAR_FILE
-#ADD target/${JAR_FILE} /usr/share/app/app.jar
-#ARG JAR_FILE
-
-#VOLUME pwd /codeEvaluator
+RUN  ls
+RUN touch /david/testFile3.txt
+RUN  ls david 
 
 COPY . /codeEvaluator
 
@@ -19,5 +13,6 @@ EXPOSE 8080
 
 RUN  ls
 RUN  ls codeEvaluator/
-
+RUN  ls david
 #ENTRYPOINT ["java","-jar","codeEvaluator/target/evaluator2-1.0.0.jar"]
+#java -jar codeEvaluator/target/evaluator2-1.0.0.jar

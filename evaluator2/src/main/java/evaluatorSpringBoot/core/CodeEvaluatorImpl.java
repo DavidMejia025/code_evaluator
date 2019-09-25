@@ -27,7 +27,7 @@ import evaluatorSpringBoot.services.docker.MyDockerClientImpl;
 @Service
 public class CodeEvaluatorImpl implements CodeEvaluator {
   private ApplicationContext context         = new AnnotationConfigApplicationContext(Config.class);
-	private final String       basePath        = "/codeEvaluator";
+	private final String       basePath        = "/codeEvaluator/submissions/";
 	private final String       stdoutFilePath  = "/codeEvaluator/submissions/documents/stdout_test.rb";
 	private SubmissionDao      submissionDAO;
 	private ResponseDao        responseDAO;
@@ -159,7 +159,7 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
     Files.copy(srcFilePath.toFile(), destFilePath.toFile());
 		System.out.println("!!!!!!!!!!!!!!!! " + destFilePath);
 
-    newSubmission.setStdoutPath("/submissions/" + Integer.toString(newSubmission.getSubmissionId()) + "/" + "stdout_test.rb"); //Think twice this route
+    newSubmission.setStdoutPath(Integer.toString(newSubmission.getSubmissionId()) + "/" + "stdout_test.rb"); //Think twice this route
 	}
 
 	public static boolean deleteDirectory(File dir) {
