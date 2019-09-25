@@ -1,0 +1,24 @@
+EC2 basic tutorial
+  Step 1: Choose an Amazon Machine Image (AMI)Cancel and Exit
+An AMI is a template that contains the software configuration (operating system, application server, and applications) required to launch your instance. You can select an AMI provided by AWS, our user community, or the AWS Marketplace; or you can select one of your own AMIs.
+
+  Step 2: Choose an Instance Type
+Cancel Previous Review and Launch Next: Configure Instance Details
+Amazon EC2 provides a wide selection of instance types optimized to fit different use cases. Instances are virtual servers that can run applications. They have varying combinations of CPU, memory, storage, and networking capacity, and give you the flexibility to choose the appropriate mix of resources for your applications.
+
+  define a key  key pair consists of a public key that AWS stores, and a private key file that you store
+    /home/deif/Downloads/awsTutorial.pem
+    awsTutorial.pem
+Private RSA Key
+Strength: 2048 bits
+
+
+  Once the instance is up and running the next step is to connect to it.
+
+  From linux connect to ssh
+   1. get instance ID
+
+
+Resources
+  Deploy app using s3
+    https://www.youtube.com/watch?v=6RrqytT0-I8

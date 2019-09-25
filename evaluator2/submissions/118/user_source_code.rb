@@ -1,1 +1,0 @@
-def test;'Hello world 2';end

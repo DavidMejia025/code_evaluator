@@ -11,11 +11,14 @@ import evaluatorSpringBoot.persistance.PollingDataSourceImpl;
 import evaluatorSpringBoot.persistance.poo.ConnectionDataSource;
 
 public class ResponsePostgresDaoImpl implements ResponseDao{
-  private  ConnectionDataSource  connection;
-  private  PollingDataSourceImpl poollconnection;
+  //private ApplicationContext    contextLogs    = new AnnotationConfigApplicationContext(ConfigLogs.class);
+  private ConnectionDataSource  connection;
+  private PollingDataSourceImpl poollconnection;
+  //private LogSystem             logs;
   
   public ResponsePostgresDaoImpl(){
     this.poollconnection = PollingDataSourceImpl.getInstance();
+    //logs = contextLogs.getBean(LogSystem.class);
   }
   
   public void create(Response newResponse) {
@@ -26,15 +29,17 @@ public class ResponsePostgresDaoImpl implements ResponseDao{
           newResponse.getUserId() + ", " +
           "'" + newResponse.getOutput() +"', " +
           newResponse.getExitCode() + ");"; 
-
+    
     try  {
-      this.connection = this.poollconnection.poolConnection();;
+      this.connection = this.poollconnection.poolConnection();
       this.connection.getConnection()
         .createStatement()
         .executeUpdate(insertResponse);
-      
+    
+      //logs.addLog("Create new Response record Error: " + "  DOne");
     } catch (Exception e) {
       System.err.println("Create new Response record Error: " + e.getMessage());
+      //logs.addLog("Create new Response record Error: " + "  Error: " + e.getMessage());
     }finally {  
       if (this.connection != null) {
         leaveConnection();
@@ -57,6 +62,7 @@ public class ResponsePostgresDaoImpl implements ResponseDao{
 
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
+      //logs.addLog("Error finding response: "+ ResponseId + "  Error: " + e.getMessage());
     } finally {  
       if (this.connection != null) {
         leaveConnection();
@@ -85,6 +91,7 @@ public class ResponsePostgresDaoImpl implements ResponseDao{
 
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
+      //logs.addLog("Error finding all submissions: " + "  Error: " + e.getMessage());
     } finally {  
       if (this.connection != null) leaveConnection();
     }
@@ -107,6 +114,7 @@ public class ResponsePostgresDaoImpl implements ResponseDao{
       
     } catch (Exception e) {
       System.err.println("Update Response  " + newResponse.getResponseId() + "  ErrorError: " + e.getMessage());
+      System.err.println("Update submission  " + newResponse.getResponseId() + "  Error: " + e.getMessage());
     } finally {  
       if (this.connection != null) {
         leaveConnection();
@@ -133,6 +141,7 @@ public class ResponsePostgresDaoImpl implements ResponseDao{
       
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
+      //logs.addLog("Error finding by " + key + "  "  +  val + " response: " + "  Error: " + e.getMessage());
     } finally {  
       if (this.connection != null) {
         leaveConnection();

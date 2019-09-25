@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.Bind;
@@ -17,19 +20,23 @@ import com.github.dockerjava.core.command.BuildImageResultCallback;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.github.dockerjava.core.command.PullImageResultCallback;
 
+import evaluatorSpringBoot.Config;
 import evaluatorSpringBoot.core.poo.Submission;
-import evaluatorSpringBoot.utils.Paths;
+import evaluatorSpringBoot.services.LogSystem;
 
 public class MyDockerClientImpl implements MyDockerClient {
+  private ApplicationContext context  = new AnnotationConfigApplicationContext(Config.class);
 	private final String volume_path    = "/home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2";
 	private final String dockerFilePath = "src/main/resources/docker/Dockerfile";
 	
-	public String imageId;
-	public String containerId; 
-	public DockerClient client; 
+	private String       imageId;
+	private String       containerId; 
+	private DockerClient client;
+	private LogSystem    logs;
 	
 	public MyDockerClientImpl() {
 		this.client = DockerClientBuilder.getInstance().build();
+		logs        = context.getBean(LogSystem.class);
 	}
 	
 	public DockerClient buildClient() {
@@ -52,18 +59,17 @@ public class MyDockerClientImpl implements MyDockerClient {
     String targetFile = "/app" + newSubmission.getStdoutPath(); 
 
     CreateContainerResponse container = this.client.createContainerCmd("121862ceb25f")
-		      .withVolumes(volume1)
-		      .withBinds(new Bind(volume_path, volume1))
-          .withCmd("ruby", targetFile)
-		      .exec();
+      .withVolumes(volume1)
+      .withBinds(new Bind(volume_path, volume1))
+      .withCmd("ruby", targetFile)
+      .exec();
 
 		this.containerId = container.getId();
 	}
 
 	@Override
 	public void startContainer(String containerId) {
-		this.client.startContainerCmd(containerId)
-	      .exec();
+		this.client.startContainerCmd(containerId).exec();
 	}
 
 	@Override
@@ -93,9 +99,8 @@ public class MyDockerClientImpl implements MyDockerClient {
 		}
 	  
     String result = collectFramesCallback.frames.toString().replaceAll("STDOUT: ", "");
-    result        = result.replaceAll("'", "\'");
-    System.out.println("Get logs ///.......................................///");
-    System.out.println(result);
+
+    logs.addLog("Get evaluator logs:  " + result);
     
     return result;
 	}
@@ -105,8 +110,8 @@ public class MyDockerClientImpl implements MyDockerClient {
 
     @Override
     public void onNext(Frame item) {
-        frames.add(item);
-        super.onNext(item);
+      frames.add(item);
+      super.onNext(item);
     }
   }
 	
@@ -123,8 +128,9 @@ public class MyDockerClientImpl implements MyDockerClient {
 			
 			imageId = findImageId(this.client, "ruby");
 		}
-		System.out.println("Get image id///.......................................///");
-		System.out.println(imageId);
+		
+		logs.addLog("Get image ids:" + imageId);
+
 		return imageId;
 	}
 	
@@ -156,9 +162,9 @@ public class MyDockerClientImpl implements MyDockerClient {
 	
 	public String buildImage(DockerClient client, String dockerFilePath) {
 		String imageId = client.buildImageCmd(new File(dockerFilePath))
-				.withNoCache(true)
-			    .exec(new BuildImageResultCallback())
-			    .awaitImageId();
+  		.withNoCache(true)
+  	  .exec(new BuildImageResultCallback())
+  	  .awaitImageId();
 		
 		return imageId;
 	}

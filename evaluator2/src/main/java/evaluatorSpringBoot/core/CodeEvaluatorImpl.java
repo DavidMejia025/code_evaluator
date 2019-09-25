@@ -21,28 +21,33 @@ import evaluatorSpringBoot.core.poo.Response;
 import evaluatorSpringBoot.core.poo.Submission;
 import evaluatorSpringBoot.persistance.dao.ResponseDao;
 import evaluatorSpringBoot.persistance.dao.SubmissionDao;
+import evaluatorSpringBoot.services.LogSystem;
 import evaluatorSpringBoot.services.docker.MyDockerClientImpl;
 
 @Service
-public class CodeEvaluatorImpl  implements CodeEvaluator {
-	private final String       basePath       = "submissions/";
-	private final String       stdoutFilePath = "submissions/documents/stdout_test.rb";
-	private String             testPath;
-	private ApplicationContext context        = new AnnotationConfigApplicationContext(Config.class);
+public class CodeEvaluatorImpl implements CodeEvaluator {
+  private ApplicationContext context         = new AnnotationConfigApplicationContext(Config.class);
+	private final String       basePath        = "submissions/";
+	private final String       stdoutFilePath  = "submissions/documents/stdout_test.rb";
 	private SubmissionDao      submissionDAO;
 	private ResponseDao        responseDAO;
 	private String             submissionInput;
+	private String             testPath;
+	private LogSystem          logs;
 	
 	public CodeEvaluatorImpl(String submissionInput) {
 	  this.submissionInput = submissionInput;
 	  submissionDAO        = context.getBean(SubmissionDao.class);
 	  responseDAO          = context.getBean(ResponseDao.class);
+	  logs                 = context.getBean(LogSystem.class);
+	  
 	  //this.submissionDAO   = FactoryDao.createSubmission(); // string injector can avoid this line of code
 	  //this.responseDAO     = FactoryDao.createResponse();
   }
 	
 	@Override
 	public Response runEval() throws IOException{
+	  logs.addLog("Submision received with input:" + this.submissionInput);
 		String code = parseJson(this.submissionInput);
 
 		Submission newSubmission = new Submission(code);
@@ -56,7 +61,7 @@ public class CodeEvaluatorImpl  implements CodeEvaluator {
 
 	  Response newResponse = new Response(newSubmission.getSubmissionId(), result, 200);
 	  responseDAO.create(newResponse);
-
+	  
     return newResponse;
     }
 
