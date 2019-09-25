@@ -51,16 +51,17 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
 		String code = parseJson(this.submissionInput);
 
 		Submission newSubmission = new Submission(code);
-		// submissionDAO.create(newSubmission);
+		logs.addLog("Create new submission record .. ----->>>>>.................................: ");
+		submissionDAO.create(newSubmission);
 
 		prepare(newSubmission);
 
 		String result = runTest(newSubmission);
 
-		// cleanTest(newSubmission);
+		cleanTest(newSubmission);
 
 	  Response newResponse = new Response(newSubmission.getSubmissionId(), result, 200);
-	  //responseDAO.create(newResponse);
+	  responseDAO.create(newResponse);
 
     return newResponse;
     }

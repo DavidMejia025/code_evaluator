@@ -1,0 +1,56 @@
+version: '2.2'
+
+services:
+  base:
+    image: code_evaluator:1.0.5
+    build:
+      context: .
+    networks:
+      - code_evaluator
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/submissions/:/codeEvaluator/submissions
+    ports:
+      - "8080:8080"
+    restart: "on-failure"
+    tty: true
+    stdin_open: true
+
+  database:
+    image: "postgres:9"
+    networks:
+      - code_evaluator
+    ports:
+      - "5433:5432"
+    volumes:
+       - db-data:/var/lib/postgresql/data
+    restart: "always"
+
+networks:
+ code_evaluator:
+
+volumes:
+  db-data:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
