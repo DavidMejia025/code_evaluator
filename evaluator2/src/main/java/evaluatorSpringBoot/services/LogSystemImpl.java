@@ -6,10 +6,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Service 
-@Component
 public class LogSystemImpl implements LogSystem {
-  @Autowired
+
   public void LogSystemImpl(){
     this.addLog("Log system start...");
   }

@@ -37,9 +37,9 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
 	
 	public CodeEvaluatorImpl(String submissionInput) {
 	  this.submissionInput = submissionInput;
-	  submissionDAO        = context.getBean(SubmissionDao.class);
-	  responseDAO          = context.getBean(ResponseDao.class);
-	  logs                 = context.getBean(LogSystem.class);
+	  submissionDAO        = context.getBean("SubmissionDaoBean",SubmissionDao.class);
+	  responseDAO          = context.getBean("ResponseDaoBean", ResponseDao.class);
+	  logs                 = context.getBean("LogsBean",LogSystem.class);
 	  
 	  //this.submissionDAO   = FactoryDao.createSubmission(); // string injector can avoid this line of code
 	  //this.responseDAO     = FactoryDao.createResponse();

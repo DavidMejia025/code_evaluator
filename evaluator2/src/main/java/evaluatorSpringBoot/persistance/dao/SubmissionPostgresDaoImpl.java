@@ -6,28 +6,26 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.jvnet.hk2.annotations.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import evaluatorSpringBoot.core.poo.Submission;
 import evaluatorSpringBoot.persistance.PollingDataSourceImpl;
 import evaluatorSpringBoot.persistance.poo.ConnectionDataSource;
-@Service 
-@Component
+import evaluatorSpringBoot.services.LogSystem;
+
 public class SubmissionPostgresDaoImpl implements SubmissionDao{
-  //private ApplicationContext     context  = new AnnotationConfigApplicationContext(Config.class);
-  private  ConnectionDataSource  connection;
-  private  PollingDataSourceImpl poollconnection;
-  //private  LogSystem             logs;
-  
+ // private ApplicationContext    context  = new AnnotationConfigApplicationContext(Config.class);
+  private ConnectionDataSource  connection;
+  private PollingDataSourceImpl poollconnection;
   @Autowired
+  private LogSystem             logs;
+  
   public SubmissionPostgresDaoImpl(){
     this.poollconnection = PollingDataSourceImpl.getInstance();
-    //logs = context.getBean(LogSystem.class);
   }
   
 	public void create(Submission newSubmission) {
+	  logs.addLog("Create new submission record ...................................: ");
     String insertSubmission = "INSERT INTO submissions (submission_id, user_id, status, code, result_id)" +
       " VALUES (" + 
           newSubmission.getSubmissionId() + ", " +
@@ -37,14 +35,14 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
           newSubmission.getResultId() + ");"; 
     
     try  {
-      this.connection = this.poollconnection.poolConnection();;
+      this.connection = this.poollconnection.poolConnection();
 	    this.connection.getConnection()
         .createStatement()
         .executeUpdate(insertSubmission);
-	    
+	    logs.addLog("Create new submission record Done");
   	} catch (Exception e) {
       System.err.println("Create new submission record Error: " + e.getMessage()); //look what is System.err. and if necessary
-      //logs.addLog("Create new submission record Error: " + "  Error: " + e.getMessage());
+      logs.addLog("Create new submission record Error: " + "  Error: " + e.getMessage());
     }finally {  
       if (this.connection != null) {
         leaveConnection();
@@ -67,7 +65,7 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
 
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
-      //logs.addLog("Error finding submission: "+ submissionId + "  Error: " + e.getMessage());
+      logs.addLog("Error finding submission: "+ submissionId + "  Error: " + e.getMessage());
     } finally {  
       if (this.connection != null) {
         leaveConnection();
@@ -96,7 +94,7 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
 
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
-      //logs.addLog("Error finding all submissions: " + "  Error: " + e.getMessage());
+      logs.addLog("Error finding all submissions: " + "  Error: " + e.getMessage());
     } finally {  
       if (this.connection != null) leaveConnection();
     }
@@ -119,7 +117,7 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
       
     } catch (Exception e) {
       System.err.println("Update submission  " + newSubmission.getSubmissionId() + "  Error: " + e.getMessage());
-      //logs.addLog("Update submission  "+ newSubmission.getSubmissionId() + "  Error: " + e.getMessage());
+      logs.addLog("Update submission  "+ newSubmission.getSubmissionId() + "  Error: " + e.getMessage());
     } finally {  
       if (this.connection != null) {
         leaveConnection();
@@ -146,7 +144,7 @@ public class SubmissionPostgresDaoImpl implements SubmissionDao{
       
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
-      //logs.addLog("Error finding by " + key + "  "  +  val + " submission: " + "  Error: " + e.getMessage());
+      logs.addLog("Error finding by " + key + "  "  +  val + " submission: " + "  Error: " + e.getMessage());
     } finally {  
       if (this.connection != null) {
         leaveConnection();

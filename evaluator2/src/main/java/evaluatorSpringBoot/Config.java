@@ -13,17 +13,17 @@ import evaluatorSpringBoot.services.LogSystemImpl;
 @Configuration
 public class Config {
   @Bean
-  public SubmissionDao submissionDao() {
+  public SubmissionDao SubmissionDaoBean() {
     return new SubmissionPostgresDaoImpl();
   }
 
   @Bean
-  public ResponseDao responseDao() {
+  public ResponseDao ResponseDaoBean() {
     return new ResponsePostgresDaoImpl();
   }
   
   @Bean
-  public LogSystem Logs() {
+  public LogSystem LogsBean() {
     return new LogSystemImpl();
   }
 }
