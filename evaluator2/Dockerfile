@@ -20,4 +20,4 @@ EXPOSE 8080
 RUN  ls
 RUN  ls codeEvaluator/
 
-ENTRYPOINT ["java","-jar","codeEvaluator/target/evaluator2-1.0.0.jar"]
+#ENTRYPOINT ["java","-jar","codeEvaluator/target/evaluator2-1.0.0.jar"]
