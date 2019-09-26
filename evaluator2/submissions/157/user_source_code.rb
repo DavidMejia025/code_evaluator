@@ -1,1 +1,0 @@
-def test;' docker compose is working helly yeahhhhh ';end

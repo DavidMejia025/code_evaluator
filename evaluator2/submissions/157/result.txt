@@ -1,2 +1,0 @@
-Result of the code evaluation is 
-[docker compose is working helly yeahhhhh]
