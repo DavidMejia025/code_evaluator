@@ -3,7 +3,8 @@ Docker
 Docker Images
 
 Docker composer
-
+  using postgres
+    https://sebastiankoltun-blog.com/index.php/2019/02/12/postgresql-docker-spring-boot/
 docker volumes
   https://www.lewuathe.com/changing-the-volume-within-dockerfile.html
   https://rominirani.com/docker-tutorial-series-part-7-data-volumes-93073a1b5b72

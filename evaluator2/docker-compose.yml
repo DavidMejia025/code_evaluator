@@ -10,20 +10,16 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/deif/Dropbox/Elite/projects/code_evaluator/evaluator2/submissions/:/codeEvaluator/submissions
-        #    links:
-        #- database
     ports:
       - "8080:8080"
-    restart: "on-failure"
-    tty: true
+    restart:    "on-failure"
+    tty:        true
     stdin_open: true
 
   database:
     image: "postgres:9"
     networks:
       - code_evaluator
-    #environment:
-    # expose: "5432"
     ports:
       - "5432:5432"
     volumes:
@@ -31,7 +27,7 @@ services:
     restart: "always"
 
 networks:
- code_evaluator:
+  code_evaluator:
 
 volumes:
   db-data:

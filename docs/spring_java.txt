@@ -1,4 +1,8 @@
+DOcker compose and postgres
+  https://sebastiankoltun-blog.com/index.php/2019/02/12/postgresql-docker-spring-boot/
+
 Annotations
+
   https://dzone.com/articles/creating-custom-annotations-in-java
 
 

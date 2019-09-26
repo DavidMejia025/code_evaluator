@@ -47,10 +47,9 @@ public class PollingDataSourceImpl implements PoollingDataSource{
     Connection conn = null;
     
     try {
-    conn = DriverManager.getConnection("jdbc:postgresql://code_evaluator:5432/code_eval_db",
-    //  conn = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/code_eval_db",
+    conn = DriverManager.getConnection("jdbc:postgresql://database:5432/code_eval_db",
         "postgres",
-        "postgres"
+        "123pormi"
       );
     
     } catch (SQLException e) {
