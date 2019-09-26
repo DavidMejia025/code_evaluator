@@ -14,7 +14,6 @@ import evaluatorSpringBoot.persistance.poo.ConnectionDataSource;
 import evaluatorSpringBoot.services.LogSystem;
 
 public class SubmissionPostgresDaoImpl implements SubmissionDao{
- // private ApplicationContext    context  = new AnnotationConfigApplicationContext(Config.class);
   private ConnectionDataSource  connection;
   private PollingDataSourceImpl poollconnection;
   @Autowired
