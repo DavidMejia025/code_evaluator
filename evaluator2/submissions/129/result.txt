@@ -1,0 +1,2 @@
+Result of the code evaluation is 
+[(stdin)= 17b945f3ccd2003a736cfc702c8d5578f39c72fc453001e03dff80fc7d540a69]

@@ -59,7 +59,7 @@ public class MyDockerClientImpl implements MyDockerClient {
 
     CreateContainerResponse container = this.client.createContainerCmd(this.imageId)
       .withBinds(new Bind(volume_path, new Volume("/app/submissions")))
-      .withCmd("ruby", targetFile)
+      .withCmd("bash", targetFile)
       .exec();
 
 		this.containerId = container.getId();

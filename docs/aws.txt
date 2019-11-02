@@ -1,3 +1,7 @@
+AWS
+  root user 
+  davidndy@gmail.com
+  I234n345l4m345e3456s
 EC2 basic tutorial
   Step 1: Choose an Amazon Machine Image (AMI)Cancel and Exit
 An AMI is a template that contains the software configuration (operating system, application server, and applications) required to launch your instance. You can select an AMI provided by AWS, our user community, or the AWS Marketplace; or you can select one of your own AMIs.

@@ -58,7 +58,7 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
 
 		String result = runTest(newSubmission);
 
-		cleanTest(newSubmission);
+		//cleanTest(newSubmission);
 
 	  Response newResponse = new Response(newSubmission.getSubmissionId(), result, 200);
 	  responseDAO.create(newResponse);
@@ -69,7 +69,8 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
 	private void prepare(Submission newSubmission) throws IOException{
 		createSubmissionFolder(newSubmission);
 		createTestFile(newSubmission);
-		copyStdoutFile(newSubmission);
+		//copyStdoutFile(newSubmission);
+		newSubmission.setStdoutPath(Integer.toString(newSubmission.getSubmissionId()) + "/" + "user_source_code"); //Think twice this route
 	}
 
 	private String runTest(Submission newSubmission) {
@@ -108,12 +109,13 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
 	}
 
 	public void createTestFile(Submission newSubmission) {
-		String fileUrl = testPath + "/" + "user_source_code.rb";
+		String fileUrl = testPath + "/" + "user_source_code";
 		File new_file  = new File(fileUrl);
 
 		String code = newSubmission.getCode();
 
-    String fileData = "def test;" + code + ";"+ "end";
+    //String fileData = "def test;" + code + ";"+ "end";
+	String fileData = "echo 'my new private key' | openssl sha256";
     generateFOS(new_file, fileData);
   }
 

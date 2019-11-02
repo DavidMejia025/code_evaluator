@@ -2,7 +2,7 @@ FROM openjdk:8-jre
 
 MAINTAINER David Mejia <davidndy@gmail.com>
 
-COPY . /codeEvaluator
+COPY . /node
 
 EXPOSE 8080
 
