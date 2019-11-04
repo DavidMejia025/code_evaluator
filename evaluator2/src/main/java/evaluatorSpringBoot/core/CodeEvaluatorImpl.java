@@ -40,9 +40,6 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
 	  submissionDAO        = context.getBean("SubmissionDaoBean",SubmissionDao.class);
 	  responseDAO          = context.getBean("ResponseDaoBean", ResponseDao.class);
 	  logs                 = context.getBean("LogsBean",LogSystem.class);
-
-	  //this.submissionDAO   = FactoryDao.createSubmission(); // string injector can avoid this line of code
-	  //this.responseDAO     = FactoryDao.createResponse();
   }
 
 	@Override
@@ -51,14 +48,14 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
 		String code = parseJson(this.submissionInput);
 
 		Submission newSubmission = new Submission(code);
-		logs.addLog("Create new submission record .. ----->>>>>.................................: ");
+
 		submissionDAO.create(newSubmission);
 
 		prepare(newSubmission);
 
 		String result = runTest(newSubmission);
 
-		//cleanTest(newSubmission);
+		cleanTest(newSubmission);
 
 	  Response newResponse = new Response(newSubmission.getSubmissionId(), result, 200);
 	  responseDAO.create(newResponse);
@@ -69,7 +66,7 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
 	private void prepare(Submission newSubmission) throws IOException{
 		createSubmissionFolder(newSubmission);
 		createTestFile(newSubmission);
-		//copyStdoutFile(newSubmission);
+		copyStdoutFile(newSubmission);
 		newSubmission.setStdoutPath(Integer.toString(newSubmission.getSubmissionId()) + "/" + "user_source_code"); //Think twice this route
 	}
 
@@ -114,8 +111,9 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
 
 		String code = newSubmission.getCode();
 
-    //String fileData = "def test;" + code + ";"+ "end";
-	String fileData = "echo 'my new private key' | openssl sha256";
+
+	  String fileData = "echo 'my new private key' | openssl sha256";
+
     generateFOS(new_file, fileData);
   }
 
@@ -160,7 +158,6 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
     Path destFilePath = Paths.get(to);
 
     Files.copy(srcFilePath.toFile(), destFilePath.toFile());
-		System.out.println("!!!!!!!!!!!!!!!! " + destFilePath);
 
     newSubmission.setStdoutPath(Integer.toString(newSubmission.getSubmissionId()) + "/" + "stdout_test.rb"); //Think twice this route
 	}
@@ -185,10 +182,8 @@ public class CodeEvaluatorImpl implements CodeEvaluator {
 			fos.flush();
 			fos.close();
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
