@@ -1,0 +1,5 @@
+The project can be run with docker-compose up
+
+to send a request to the code evaluator use the following instruction:
+  curl -i -H "Content-Type: application/json"  -d  "{ \"code\": \"puts 'Hello World'\" }" -X POST http://localhost:8080/v1
+
